@@ -98,7 +98,7 @@
                 <td class="link">
                     <?php foreach (explode(PHP_EOL, $snipe['data']) as $number): ?>
                     <?php $number = explode(' ', $number)[0]; ?>
-                    <a href="http://search.ebay.de/<?php echo $number; ?>" target="_blank"
+                    <a href="http://search.<?php echo $config['ebay']; ?>/<?php echo $number; ?>" target="_blank"
                        title="Show on ebay"><i class="fa fa-external-link"></i> <?php echo $number; ?></a>
                     <?php endforeach; ?>
                 </td>

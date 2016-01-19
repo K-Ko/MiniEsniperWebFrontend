@@ -7,7 +7,16 @@
  * @licence    MIT License - http://opensource.org/licenses/MIT
  * @version    1.0.0
  */
-
 return array(
-    '.esniper' => '~/.esniper'
+
+    /**
+     * Your esniper config file
+     */
+    '.esniper' => '~/.esniper',
+
+    /**
+     * Which site to use for links to auctions
+     */
+    'ebay' => 'ebay.com',
+
 );
