@@ -1,0 +1,139 @@
+/**
+ *
+ *
+ * @author     Knut Kohl <github@knutkohl.de>
+ * @copyright  (c) 2016 Knut Kohl
+ * @licence    MIT License - http://opensource.org/licenses/MIT
+ * @version    1.0.0
+ */
+
+body {
+    max-width: 960px;
+    margin: 1em auto;
+    min-height: 90%;
+}
+
+form {
+    display: inline;
+}
+
+.container {
+    padding: .5em 0;
+}
+
+a {
+    text-decoration: none;
+    color: maroon;
+}
+
+a .fa {
+    color: dimgrey;
+}
+
+#reload {
+    float: right;
+}
+
+#github {
+    font-size: small;
+    text-align: right;
+}
+
+label {
+    display: inline-block;
+    margin: .3em .2em;
+}
+
+textarea {
+    font-family: 'Courier New', Courier, 'Andale Mono', monospace;
+}
+
+textarea,
+input[type=text] {
+    padding: .25em .5em;
+}
+
+input[type=submit].fa {
+    font-family: FontAwesome;
+    padding: .25em .5em;
+    margin-right: 1em;
+}
+
+#data-text {
+    width: 20em;
+    height: 5em;
+}
+
+.header tbody td {
+    vertical-align: middle;
+}
+
+.header tbody td.action {
+    padding-left: 1em;
+}
+
+.header tbody td.link {
+    font-size: small;
+}
+
+.header tbody td.link a {
+    margin-left: 1em;
+}
+
+textarea.log {
+    height: 20em;
+    width: 100%;
+}
+
+sup .fa-question {
+    font-size: 120%;
+    font-weight: bold;
+}
+
+.pointer {
+    cursor: pointer;
+}
+
+.hidden {
+    display:none;
+}
+
+.h1 {
+    font-size: 200%;
+    font-weight: bold;
+}
+
+.run-0 {
+    /* stopped */
+    color: dimgrey;
+}
+
+.run-1 {
+    /* running */
+    color: green;
+}
+
+.fl {
+    float: left;
+}
+
+.fr {
+    float: right;
+}
+
+.w50 {
+    width: 50%;
+    float: left;
+}
+
+.clear:before,
+.clear:after {
+  content:"";
+  display:table;
+}
+.clear:after {
+  clear:both;
+}
+.clear {
+  zoom:1; /* For IE 6/7 (trigger hasLayout) */
+}

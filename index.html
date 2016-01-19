@@ -1,0 +1,127 @@
+<!--
+/**
+ *
+ *
+ * @author     Knut Kohl <github@knutkohl.de>
+ * @copyright  (c) 2016 Knut Kohl
+ * @licence    MIT License - http://opensource.org/licenses/MIT
+ * @version    1.0.0
+ */
+-->
+<!DOCTYPE HTML>
+<html>
+<head>
+    <meta http-equiv="content-type" content="text/html; charset=utf-8">
+    <title>esniper@<?php passthru('uname -n'); ?></title>
+    <link rel="stylesheet" href="normalize.css">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.5.0/css/font-awesome.min.css">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body style="opacity:0"><!-- <<< Initialy hide whole body until JS scroll and hide logs is finished -->
+
+    <section id="nav">
+        <div class="container">
+            <div class="w50">
+                <a href="/" title="Reload page"><i class="fa fa-refresh fa-2x"></i></a>
+                &nbsp;
+                <a href="" onclick="toggle('addform'); return false;"
+                   title="Add auctions"><i class="fa fa-plus-circle fa-2x"></i></a>
+            </div>
+
+            <div id="github" class="w50">
+                Minimal esniper web frontend v<?php echo APPVERSION; ?> on
+                <a href="https://github.com/K-Ko/MiniEsniperWebFrontend">
+                    <i class="fa fa-github fa-lg"></i> GitHub
+                </a>
+            </div>
+            <div class="clear"></div>
+        </div>
+    </section>
+
+
+    <!-- Entry form start -->
+    <section id="addform" <?php if (!empty($snipes) && empty($name)) echo 'style="display:none"'; ?>>
+        <div class="container">
+            <form method="post">
+                <input type="hidden" name="action" value="start">
+                <p>
+                    <label for="name-input">Auction group name</label>:<br />
+                    <input id="name-input" type="text" name="name" value="<?php echo @$name; ?>">
+                </p>
+                <p>
+                    <label for="data-text">Auction(s)</label>:
+                    <sup><i class="fa fa-question" title="Each auction line contains an auction number, optionally followed by a bid price. If no bid price is given, the auction number uses the bid price of the first prior auction line that contains a bid price."></i></sup>
+                    <br />
+                    <textarea id="data-text" class="data" name="data"><?php echo @$data; ?></textarea>
+                </p>
+                <p>
+                    <input type="submit" class="fa" value="&#xf00c;" title="Start">
+                </p>
+            </form>
+        </div>
+    </section>
+    <!-- Entry form end -->
+
+    <!-- Snipes start-->
+    <?php foreach ($snipes as $name=>$snipe): $hash = md5($name); ?>
+    <section id="logs">
+        <div class="container">
+
+            <table class="header"><tbody><tr>
+
+                <td class="h1 run-<?php echo (int) !!$snipe['pid']; ?>">
+                    <sup class="pointer" onclick="toggle('<?php echo $hash; ?>');" title="Toggel esniper protocol"><i class="fa fa-eye"></i></sup>
+                    <?php echo $name; ?>
+                </td>
+
+                <td class="action">
+                    <?php if ($snipe['pid']): ?>
+                    <form method="post">
+                        <input type="hidden" name="action" value="kill">
+                        <input type="hidden" name="name" value="<?php echo $name; ?>">
+                        <input type="submit" class="fa" value="&#xf05e;" title="Cancel snipe">
+                    </form>
+                    <?php else: ?>
+                    <form method="post">
+                        <input type="hidden" name="action" value="edit">
+                        <input type="hidden" name="name" value="<?php echo $name; ?>">
+                        <input type="submit" class="fa" value="&#xf040;" title="Edit auctions">
+                    </form>
+                    <form method="post">
+                        <input type="hidden" name="action" value="remove">
+                        <input type="hidden" name="name" value="<?php echo $name; ?>">
+                        <input type="submit" class="fa" value="&#xf1f8;" title="Remove auctions & log">
+                    </form>
+                    <?php endif; ?>
+                </td>
+
+                <td class="link">
+                    <?php foreach (explode(PHP_EOL, $snipe['data']) as $number): ?>
+                    <?php $number = explode(' ', $number)[0]; ?>
+                    <a href="http://search.ebay.de/<?php echo $number; ?>" target="_blank"
+                       title="Show on ebay"><i class="fa fa-external-link"></i> <?php echo $number; ?></a>
+                    <?php endforeach; ?>
+                </td>
+
+            </tr></tbody></table>
+
+            <?php if (isset($_SESSION[$name]['time'])): ?>
+            <p>
+                <?php printf('esniper started in %.1f seconds.', $_SESSION[$name]['time']); ?>
+            </p>
+            <?php unset($_SESSION[$name]['time']); ?>
+            <?php endif; ?>
+        </div>
+
+        <div id="<?php echo $hash; ?>" class="container">
+            <textarea class="log" readonly="readonly"><?php echo $snipe['log']; ?></textarea>
+        </div>
+
+        <?php endforeach; ?>
+    </section>
+    <!-- Snipes end -->
+
+    <script src="script.js"></script>
+
+</body>
+</html>
