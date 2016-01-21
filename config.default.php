@@ -19,4 +19,17 @@ return array(
      */
     'ebay' => 'ebay.com',
 
+    /**
+     * Collapse esniper logs at start
+     * This could help for better overview if you have a lot of auction groups
+     * 0 - show always all logs
+     * example: 5 - shows all logs if there up to 4 auction groups
+     */
+    'collapseLogs' => 0,
+
+    /**
+     * Design
+     */
+    'design' => 'default',
+
 );

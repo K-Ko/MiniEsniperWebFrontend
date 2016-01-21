@@ -10,18 +10,35 @@
 
 if (!defined('ROOTDIR')) exit;
 
+/**
+ * Debugging
+ */
 function p($p) { echo '<pre>'. print_r($p,1). '</pre>'; }
 
+/**
+ * Collect snipes data
+ */
 function snipes() {
     $snipes = array();
 
     foreach (glob(DATADIR.'/*.txt') as $file) {
         $name = basename($file, '.txt');
-        $pid  = 'ps -fea | grep "[ /]esniper" | grep '.escapeshellarg($name).' | awk \'{print $2}\'';
+        $raw = file($file, FILE_IGNORE_NEW_LINES);
         $log  = DATADIR.'/'.$name.'.log';
+        // Find process Id
+        $pid  = 'ps -fea | grep "[ /]esniper" | grep '.escapeshellarg($name).' | awk \'{print $2}\'';
+
+        $data = '';
+        foreach ($raw as $line) {
+            // Ignore empty and comment lines
+            if ('' == $line = preg_replace('~^\s*#.*~m', '', $line)) continue;
+            $data .= $line . PHP_EOL;
+        }
+
         $snipes[$name] = array(
             'name' => $name,
-            'data' => file_get_contents($file),
+            'raw'  => implode(PHP_EOL, $raw),
+            'data' => trim($data),
             'pid'  => exec($pid),
             'log'  => is_file($log) ? trim(file_get_contents($log)) : ''
         );
@@ -31,15 +48,14 @@ function snipes() {
 }
 
 // ---------------------------------------------------------------------------
+define('APPVERSION', trim(file_get_contents(__DIR__.DS.'.version')));
+
 // Make hidden server unique directory name to store files
 define('DATADIR', __DIR__.DS.'.d'.substr(md5(__DIR__), -11));
-define('APPVERSION', trim(file_get_contents(__DIR__.DS.'.version')));
 
 is_dir(DATADIR) || mkdir(DATADIR);
 
 session_start();
-
-$config = file_exists('config.php') ? include 'config.php' : include 'config.default.php';
 
 $snipes = snipes();
 
@@ -47,6 +63,9 @@ $snipes = snipes();
   
 if (empty($_POST)) return;
 
+// ---------------------------------------------------------------------------
+// Continue ONLY for POST requests
+// ---------------------------------------------------------------------------
 extract(array_merge(
     array('action' => null, 'name' => null, 'data' => null),
     $_POST
@@ -74,11 +93,19 @@ switch ($action) {
         );
 
         @unlink($logFile);
-        file_put_contents($logFile, $cmd.PHP_EOL.str_repeat('-',79).PHP_EOL);
+
+        $sep = str_repeat('-',79) . PHP_EOL;
+
+        file_put_contents(
+            $logFile,
+            $cmd . PHP_EOL . $sep . $data . PHP_EOL . $sep
+        );
+
+        set_time_limit(0);
         exec($cmd);
 
         $ts = microtime(true);
-        $i = 30;
+        $i = 90;
         // Waits max. 30 sec. for esniper log containing string "sleeping"
         do {
             sleep(1);
@@ -100,7 +127,7 @@ switch ($action) {
     // ---------------
     case 'edit':
         @unlink($logFile);
-        $data = $snipes[$name]['data'];
+        $data = $snipes[$name]['raw'];
         unset($snipes[$name]);
         break;
 
