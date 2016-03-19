@@ -1,0 +1,25 @@
+/* http://www.kollermedia.at/archive/2008/03/24/easy-css-tooltip/ */
+
+.tooltip > span:first-of-type {
+    display: none;
+    padding: .5em;
+    margin-left: 10px;
+    margin-top: 10px;
+    max-width: 300px;
+    color: #000000;
+    font-size: 12px;
+    font-weight: normal;
+    background: #DDDDDD;
+    background: -webkit-linear-gradient(top, #DDDDDD, #FFFFFF);
+    background: linear-gradient(top, #DDDDDD, #FFFFFF);      
+    border: 1px solid #666666;
+    -webkit-border-radius: .5em;
+    -moz-border-radius: .5em;
+    border-radius: .5em;
+    z-index: 10;
+}
+
+.tooltip:hover > span:first-of-type {
+    display:inline-block;
+    position: absolute;
+}

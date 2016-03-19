@@ -1,2 +1,4 @@
 /.d*
-/config.php
+/design/custom/
+/tmp/*
+config.php

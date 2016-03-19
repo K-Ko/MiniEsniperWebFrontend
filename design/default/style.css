@@ -1,0 +1,174 @@
+/**
+ *
+ *
+ * @author     Knut Kohl <github@knutkohl.de>
+ * @copyright  (c) 2016 Knut Kohl
+ * @licence    MIT License - http://opensource.org/licenses/MIT
+ * @version    1.0.0
+ */
+
+body {
+    margin: .5em;
+    font-family: "Comic Sans MS", cursive, sans-serif;
+}
+
+form {
+    display: inline;
+}
+
+.container {
+    margin: .5em 0;
+}
+
+a {
+    text-decoration: none;
+    color: maroon;
+}
+
+a.fa {
+    color: dimgrey;
+}
+
+#reload {
+    float: right;
+}
+
+#github {
+    display: none;
+}
+
+#toggle-form {
+    float:right;
+}
+
+label {
+    display: inline-block;
+    margin: .3em 0 .3em .2em;
+}
+
+textarea,
+div.log {
+    font-family: 'Courier New', Courier, 'Andale Mono', monospace;
+}
+
+textarea,
+input[type=text] {
+    padding: .25em .5em;
+}
+
+input[type=submit].fa {
+    font-family: FontAwesome;
+    padding: .25em .5em;
+}
+
+#data-text {
+    width: 20em;
+    height: 5em;
+}
+
+a.ebay {
+    display: none;
+}
+
+div.log {
+    width: 100%;
+    height: 20em;
+    padding: .5em;
+    overflow: auto;
+    white-space: pre-wrap;
+    border: solid dimgrey 1px;
+}
+
+.fa-question {
+    margin: 0 .25em;
+
+    /* Simulate <sup> - http://jsfiddle.net/kaidjohnson/89jdwp0f/ */
+    /* Specified in % so that the sup/sup is the right size relative to the surrounding text */
+    font-size: 75%;
+    /* Zero out the line-height so that it doesn't interfere with the positioning that follows */
+    line-height: 0;
+    /* Where the magic happens: makes all browsers position the sup/sup properly, relative to the surrounding text */
+    position: relative;
+    /* Note that if you're using Eric Meyer's reset.css, this is already set and you can remove this rule */
+    vertical-align: baseline;
+    /* Prevent sup and sub from rendering text-decoration */
+    display: inline-block;
+    /* Move the superscripted text up */
+    top: -.5em;
+}
+
+.pointer {
+    cursor: pointer;
+}
+
+.hidden {
+    display:none;
+}
+
+.h1 {
+    font-size: 150%;
+    font-weight: bold;
+}
+
+.run-0 {
+    /* stopped */
+    color: dimgrey;
+}
+
+.run-1 {
+    /* running */
+    color: green;
+}
+
+.fr {
+    float: right;
+}
+
+@media only screen and (min-width: 420px) {
+    .container {
+        margin: 1em 0;
+    }
+
+    .fl {
+        float: left;
+        display: block;
+        margin-right: 1em;
+    }
+
+    a.ebay {
+        font-size: small;
+        margin-right: 1em;
+        display: inline-block;
+    }
+
+    #toggle-form {
+        float:left;
+    }
+
+    #github {
+        float: right;
+        text-align: right;
+        font-size: small;
+        display: block;
+    }
+}
+
+@media only screen and (min-width: 800px) {
+    body {
+        max-width: 780px;
+        margin: .5em auto;
+    }
+}
+
+
+.clear:before,
+.clear:after {
+  content:"";
+  display:table;
+}
+.clear:after {
+  clear:both;
+}
+.clear {
+  zoom:1; /* For IE 6/7 (trigger hasLayout) */
+}
