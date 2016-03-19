@@ -1,13 +1,7 @@
+    @author     Knut Kohl <github@knutkohl.de>
+    @copyright  (c) 2016 Knut Kohl
+    @licence    MIT License - ttp://opensource.org/licenses/MIT
+    @version    1.0.0
+    @since      1.0.0
+
 # Default design
-
-To build your own design:
-
-  - Copy all design files into a new directory
-
-
-          # cp design/default design/new_design
-
-  - Change `config.php` to use your `new_design`
-  - If you think, your design is helpful
-    - Change `README.md` and explain your changes
-    - Send a pull request

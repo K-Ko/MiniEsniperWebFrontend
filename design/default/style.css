@@ -9,6 +9,7 @@
 
 body {
     margin: .5em;
+    font-family: "Comic Sans MS", cursive, sans-serif;
 }
 
 form {
@@ -24,7 +25,7 @@ a {
     color: maroon;
 }
 
-a .fa {
+a.fa {
     color: dimgrey;
 }
 
@@ -34,6 +35,10 @@ a .fa {
 
 #github {
     display: none;
+}
+
+#toggle-form {
+    float:right;
 }
 
 label {
@@ -68,17 +73,28 @@ a.ebay {
 div.log {
     width: 100%;
     height: 20em;
-    padding: .5em 0;
+    padding: .5em;
     overflow: auto;
     white-space: pre-wrap;
     border: solid dimgrey 1px;
 }
 
 .fa-question {
-    font-size: 120%;
-    font-weight: bold;
     margin: 0 .25em;
-    cursor: help;
+
+    /* Simulate <sup> - http://jsfiddle.net/kaidjohnson/89jdwp0f/ */
+    /* Specified in % so that the sup/sup is the right size relative to the surrounding text */
+    font-size: 75%;
+    /* Zero out the line-height so that it doesn't interfere with the positioning that follows */
+    line-height: 0;
+    /* Where the magic happens: makes all browsers position the sup/sup properly, relative to the surrounding text */
+    position: relative;
+    /* Note that if you're using Eric Meyer's reset.css, this is already set and you can remove this rule */
+    vertical-align: baseline;
+    /* Prevent sup and sub from rendering text-decoration */
+    display: inline-block;
+    /* Move the superscripted text up */
+    top: -.5em;
 }
 
 .pointer {
@@ -90,7 +106,7 @@ div.log {
 }
 
 .h1 {
-    font-size: 200%;
+    font-size: 150%;
     font-weight: bold;
 }
 
@@ -125,9 +141,14 @@ div.log {
         display: inline-block;
     }
 
+    #toggle-form {
+        float:left;
+    }
+
     #github {
-        font-size: small;
+        float: right;
         text-align: right;
+        font-size: small;
         display: block;
     }
 }
@@ -138,6 +159,7 @@ div.log {
         margin: .5em auto;
     }
 }
+
 
 .clear:before,
 .clear:after {

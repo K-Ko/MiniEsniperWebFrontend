@@ -12,55 +12,77 @@ if (!defined('ROOTDIR')) exit;
 
 /**
  * Debugging
+ * /
+function _d($p)
+{
+    echo '<pre>'. print_r($p,1). '</pre>';
+}
+
+/**
+ * Find process Id
  */
-function p($p) { echo '<pre>'. print_r($p,1). '</pre>'; }
+function pid($name)
+{
+    return exec('ps -fea | grep "[ /]esniper" | grep '.hashname($name).' | awk \'{print $2}\'');
+}
+
+/**
+ * Find process Id
+ */
+function hashname($name)
+{
+    return substr(md5($name), -8);
+}
 
 /**
  * Collect snipes data
  */
-function snipes() {
+function snipes()
+{
     $snipes = array();
 
     foreach (glob(DATADIR.'/*.txt') as $file) {
-        $name = basename($file, '.txt');
-        $raw = file($file, FILE_IGNORE_NEW_LINES);
-        $log  = DATADIR.'/'.$name.'.log';
-        // Find process Id
-        $pid  = 'ps -fea | grep "[ /]esniper" | grep '.escapeshellarg($name).' | awk \'{print $2}\'';
+        $data = file($file, FILE_IGNORE_NEW_LINES);
+        $name = trim($data[0], '# ');
+        $log  = DATADIR.'/'.hashname($name).'.log';
 
-        $data = '';
-        foreach ($raw as $line) {
+        $items = array();
+        foreach ($data as $line) {
             // Ignore empty and comment lines
             if ('' == $line = preg_replace('~^\s*#.*~m', '', $line)) continue;
-            $data .= $line . PHP_EOL;
+            $items[] = explode(' ', $line)[0];
         }
 
         $snipes[$name] = array(
-            'name' => $name,
-            'raw'  => implode(PHP_EOL, $raw),
-            'data' => trim($data),
-            'pid'  => exec($pid),
-            'log'  => is_file($log) ? trim(file_get_contents($log)) : ''
+            'name'  => $name,
+            'data'  => implode(PHP_EOL, $data),
+            'items' => $items,
+            'pid'   => pid($name),
+            'log'   => is_file($log) ? utf8_encode(trim(file_get_contents($log))) : ''
         );
     }
     ksort($snipes);
+
     return $snipes;
 }
 
 // ---------------------------------------------------------------------------
-define('APPVERSION', trim(file_get_contents(__DIR__.DS.'.version')));
-
 // Make hidden server unique directory name to store files
+// Start with a fixed .d for .gitignore :-)
 define('DATADIR', __DIR__.DS.'.d'.substr(md5(__DIR__), -11));
 
 is_dir(DATADIR) || mkdir(DATADIR);
+
+if (!is_dir(DATADIR)) {
+    die('Unable to create data directory:<pre>'.DATADIR.'</pre>Please check permissions.');
+}
+
+$name = $data = '';
 
 session_start();
 
 $snipes = snipes();
 
-#p($snipes);
-  
 if (empty($_POST)) return;
 
 // ---------------------------------------------------------------------------
@@ -73,33 +95,35 @@ extract(array_merge(
 
 if ($action == '' || $name == '') return;
 
-$dataFile = DATADIR.'/'.$name.'.txt';
-$logFile  = DATADIR.'/'.$name.'.log';
+$dataFile = DATADIR.'/'.hashname($name).'.txt';
+$logFile  = DATADIR.'/'.hashname($name).'.log';
 
 // ---------------------------------------------------------------------------
 switch ($action) {
 
     // ---------------
     case 'start':
-        if ($data == '') break;
+        $data = trim(str_replace(',', '.', $data));
 
-        file_put_contents($dataFile, $data);
+        if ($data == '') break;
 
         $cmd = sprintf(
             'esniper -bc %s %s >>%s 2>&1 &',
-            $config['.esniper'],
-            escapeshellarg($dataFile),
-            escapeshellarg($logFile)
+            $config['.esniper'], $dataFile, $logFile
         );
 
         @unlink($logFile);
 
-        $sep = str_repeat('-',79) . PHP_EOL;
+        $sep = str_repeat('-', 79) . PHP_EOL;
 
-        file_put_contents(
-            $logFile,
-            $cmd . PHP_EOL . $sep . $data . PHP_EOL . $sep
-        );
+//         file_put_contents(
+//             $logFile,
+//             $cmd . PHP_EOL . $sep . $data . PHP_EOL . $sep
+//         );
+
+        $data = '# ' . $name . PHP_EOL . $data;
+
+        file_put_contents($dataFile, $data);
 
         set_time_limit(0);
         exec($cmd);
@@ -110,7 +134,9 @@ switch ($action) {
         do {
             sleep(1);
             $snipes = snipes();
-        } while ($i-- && strpos($snipes[$name]['log'], 'Sleeping for') === false);
+        } while ($i-- &&
+                 (strpos($snipes[$name]['log'], 'Sleeping for') === false) &&
+                 (strpos($snipes[$name]['log'], 'Sorting auctions') === false));
 
         $_SESSION[$name]['time'] = microtime(true) - $ts;
         session_write_close();
@@ -120,14 +146,27 @@ switch ($action) {
     // ---------------
     case 'kill':
         exec('kill '.$snipes[$name]['pid']);
-        unset($name);
+        $name = '';
         $snipes = snipes();
         break;
 
     // ---------------
     case 'edit':
         @unlink($logFile);
-        $data = $snipes[$name]['raw'];
+        $data = explode(PHP_EOL, $snipes[$name]['data']);
+        array_shift($data);
+        $data = implode(PHP_EOL, $data);
+        unset($snipes[$name]);
+        break;
+
+    // ---------------
+    case 'kill-edit':
+        exec('kill '.$snipes[$name]['pid']);
+        $snipes = snipes();
+        @unlink($logFile);
+        $data = explode(PHP_EOL, $snipes[$name]['data']);
+        array_shift($data);
+        $data = implode(PHP_EOL, $data);
         unset($snipes[$name]);
         break;
 
@@ -136,7 +175,13 @@ switch ($action) {
         @unlink($dataFile);
         @unlink($logFile);
         unset($snipes[$name]);
-        unset($name);
+        $name = '';
+        break;
+
+    // ---------------
+    case 'bug':
+        @unlink($name);
+        $name = '';
         break;
 
 }
