@@ -82,10 +82,10 @@
                     <br />
                     <textarea id="data-text" class="data" name="data">{{$data}}</textarea>
                 </p>
-                <span class="tooltip">
-                    <input type="submit" class="fa" value="&#xf00c;">
+                <button class="tooltip">
+                    <i class="fa fa-check"></i>
                     <span>Start sniping</span>
-                </span>
+                </button>
             </form>
         </div>
         <hr />
@@ -113,36 +113,36 @@
                 <form method="post">
                     <input type="hidden" name="action" value="kill-edit">
                     <input type="hidden" name="name" value="{{$name}}">
-                    <span class="tooltip">
-                        <input type="submit" class="fa tooltip" value="&#xf040;">
+                    <button class="tooltip">
+                        <i class="fa fa-pencil"></i>
                         <span>Cancel active snipe &amp; edit sniping group</span>
-                    </span>
+                    </button>
                 </form>
                 <form method="post">
                     <input type="hidden" name="action" value="kill">
                     <input type="hidden" name="name" value="{{$name}}">
-                    <span class="tooltip">
-                        <input type="submit" class="fa tooltip" value="&#xf05e;">
+                    <button class="tooltip">
+                        <i class="fa fa-ban"></i>
                         <span>Cancel active snipe</span>
-                    </span>
+                    </button>
                 </form>
                 {{else:}}
                 <!-- esniper process IS NOT running -->
                 <form method="post">
                     <input type="hidden" name="action" value="edit">
                     <input type="hidden" name="name" value="{{$name}}">
-                    <span class="tooltip">
-                        <input type="submit" class="fa tooltip" value="&#xf040;">
+                    <button class="tooltip">
+                        <i class="fa fa-pencil"></i>
                         <span>Edit sniping group</span>
-                    </span>
+                    </button>
                 </form>
                 <form method="post">
                     <input type="hidden" name="action" value="remove">
                     <input type="hidden" name="name" value="{{$name}}">
-                    <span class="tooltip">
-                        <input type="submit" class="fa tooltip" value="&#xf1f8;">
+                    <button class="tooltip">
+                        <i class="fa fa-trash"></i>
                         <span>Remove sniping group &amp; log</span>
-                    </span>
+                    </button>
                 </form>
                 {{endif}}
             </div>
@@ -184,23 +184,24 @@
             esniper bug reports
         </p>
 
+        <form method="post">
+        <input type="hidden" name="action" value="bug">
+
         {{foreach ($bugs as $bug):}}
         <p>
-            <a href="{{$bug}}" class="fl tooltip" target="_blank">
+            <input type="checkbox" name="bug[]" value="{{$bug}}">
+            &nbsp;
+            <a href="{{$bug}}" class="tooltip" target="_blank">
                <i class="fa fa-external-link"></i>
                {{$bug}}
                <span>Show esniper bug report</span>
             </a>
-            <form method="post">
-                <input type="hidden" name="action" value="bug">
-                <input type="hidden" name="name" value="{{$bug}}">
-                <span class="tooltip">
-                    <input type="submit" class="fa tooltip" value="&#xf1f8;">
-                    <span>Delete esniper bug report</span>
-                </span>
-            </form>
         </p>
         {{endforeach}}
+        <button>
+            <i class="fa fa-trash"></i> &nbsp; Delete esniper bug report(s)
+        </button>
+        </form>
     </section>
     {{endif}}
 

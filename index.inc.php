@@ -93,7 +93,7 @@ extract(array_merge(
     $_POST
 ));
 
-if ($action == '' || $name == '') return;
+if ($action == '') return;
 
 $dataFile = DATADIR.'/'.hashname($name).'.txt';
 $logFile  = DATADIR.'/'.hashname($name).'.log';
@@ -180,8 +180,10 @@ switch ($action) {
 
     // ---------------
     case 'bug':
-        @unlink($name);
-        $name = '';
+        if (isset($_POST['bug'])) {
+            foreach ($_POST['bug'] as $name) @unlink($name);
+            $name = '';
+        }
         break;
 
 }
