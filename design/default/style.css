@@ -41,6 +41,14 @@ a.fa {
     float: right;
 }
 
+.label-wrapper {
+    width: 12em;
+}
+
+.label-wrapper.spacer {
+    display: none;
+}
+
 label {
     display: inline-block;
     margin: .3em 0 .3em .2em;
@@ -60,9 +68,13 @@ button {
     padding: .25em .5em;
 }
 
+#name-input,
 #data-text {
     width: 20em;
-    height: 5em;
+}
+
+#data-text {
+    height: 8em;
 }
 
 a.ebay {
@@ -123,7 +135,7 @@ div.log {
     float: right;
 }
 
-@media only screen and (min-width: 460px) {
+@media only screen and (min-width: 420px) {
     .container {
         margin: 1em 0;
     }
@@ -148,6 +160,15 @@ div.log {
         float: right;
         text-align: right;
         font-size: small;
+        display: block;
+    }
+}
+
+@media only screen and (min-width: 35em) {
+    .label-wrapper {
+        float: left;
+    }
+    .label-wrapper.spacer {
         display: block;
     }
 }

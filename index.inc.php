@@ -139,6 +139,12 @@ switch ($action) {
                  (strpos($snipes[$name]['log'], 'Sorting auctions') === false));
 
         $_SESSION[$name]['time'] = microtime(true) - $ts;
+
+        if (strpos($snipes[$name]['log'], 'Sorting auctions')) {
+            // Wait another 2 seconds after "Sorting auctions" for log comes up
+            sleep(2);
+        }
+
         session_write_close();
         header('Location: /');
         break;
