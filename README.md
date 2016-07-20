@@ -13,11 +13,11 @@ Your configuration file (usually `~/.esniper`) must contain only
     username = <your ebay account name>
     password = <your password here>
 
-If you have another esniper config file, copy `config.default.php`
+If you have another esniper config file or want to protect the installation with basic auth, copy `config.default.php`
 
     # cp config.default.php config.php
 
-and adjust the file path.
+and adjust the settings.
 
 > Your installation directory must be writable for the web server running user, a unique data directory for file storage will be created on 1st run.
 
@@ -33,14 +33,9 @@ Start the sniping.
 
 ### Stop sniping
 
-Click on the stop button near the auction group name.
+Click on the edit button near the auction group name.
 
-This will stop the running esniper process for this group.
-
-### Edit auction group
-
-  - 1st stop, if active
-  - Click on the edit button near the auction group name.
+This will stop the running esniper process for this group and you can adjust the auction snipes.
 
 ### Remove auction groups
 

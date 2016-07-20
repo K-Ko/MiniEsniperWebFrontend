@@ -10,6 +10,15 @@
 return array(
 
     /**
+     * Basic auth settings
+     */
+    'basic_auth' => array(
+        'message'  => 'Restricted area',
+        'user'     => null,
+        'password' => null
+    ),
+
+    /**
      * Your personal application title
      */
     'title' => 'esniper@'.trim(exec('uname -n')),
@@ -29,5 +38,10 @@ return array(
      * Design
      */
     'design' => 'default',
+
+    /**
+     * Only for development
+     */
+    'debug' => false,
 
 );

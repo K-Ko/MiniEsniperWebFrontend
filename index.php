@@ -10,15 +10,17 @@
 
 $_start = microtime(true);
 
-ini_set('display_errors', 1);
-error_reporting(-1);
-
 define('DS', DIRECTORY_SEPARATOR);
 define('ROOTDIR', dirname(__DIR__));
 
 $config = include 'config/config.default.php';
 if (is_file('config/config.php')) {
     $config = array_merge($config, include 'config/config.php');
+}
+
+if ($config['debug']) {
+    ini_set('display_errors', 1);
+    error_reporting(-1);
 }
 
 $config['version'] = trim(file_get_contents(__DIR__.DS.'.version'));

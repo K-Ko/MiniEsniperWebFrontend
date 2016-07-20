@@ -30,7 +30,9 @@
                 <a href="http://esniper.sourceforge.net/" target="_blank">
                     <i class="fa fa-external-link"> esniper</i>
                 </a>
-                web frontend v{{$cfg_version}} on
+                web frontend
+                <br>
+                v{{$cfg_version}} on
                 <a href="https://github.com/K-Ko/MiniEsniperWebFrontend" target="_blank">
                     <i class="fa fa-github"> GitHub</i>
                 </a>
@@ -56,35 +58,41 @@
             <form method="post" accept-charset="utf-8">
                 <input type="hidden" name="action" value="start">
                 <p>
-                    <label for="name-input">Auction group name</label>
-                    <span class="tooltip">
-                        <i class="fa fa-question"></i>
-                        <span>Auction groups will be sorted alphabetic.</span>
-                    </span>
-                    <br />
-                    <input id="name-input" type="text" name="name" value="{{$name}}">
-                </p>
-                <p>
-                    <label for="data-text">Auction(s)</label>
-                    <small>
-                        (<a href="http://esniper.sourceforge.net/sample_auction.txt" class="tooltip"
-                            target="_blank">example<span>Auction file example</span></a>)
-                    </small>
-                    <span class="tooltip">
-                        <i class="fa fa-question"></i>
-                        <span>
-                            Each auction line contains an auction number,
-                            optionally followed by a bid price.<br />
-                            If no bid price is given, the auction number uses the bid price
-                            of the first prior auction line that contains a bid price.
+                    <div class="label-wrapper">
+                        <label for="name-input">Auction group name</label>
+                        <span class="tooltip">
+                            <i class="fa fa-question"></i>
+                            <span>Auction groups will be sorted alphabetic.</span>
                         </span>
-                    </span>
-                    <br />
-                    <textarea id="data-text" class="data" name="data">{{$data}}</textarea>
+                    </div>
+                    <input id="name-input" type="text" name="name" value="{{$name}}">
+                    <div class="clear"></div>
                 </p>
-                <button class="tooltip">
-                    <i class="fa fa-check"></i>
-                    <span>Start sniping</span>
+
+                <p>
+                    <div class="label-wrapper">
+                        <label for="data-text">Auction(s)</label>
+                        <small>
+                            (<a href="http://esniper.sourceforge.net/sample_auction.txt" class="tooltip"
+                                target="_blank">example<span>Auction file example</span></a>)
+                        </small>
+                        <span class="tooltip">
+                            <i class="fa fa-question"></i>
+                            <span>
+                                Each auction line contains an auction number,
+                                optionally followed by a bid price.<br />
+                                If no bid price is given, the auction number uses the bid price
+                                of the first prior auction line that contains a bid price.
+                            </span>
+                        </span>
+                    </div>
+                    <textarea id="data-text" class="data" name="data">{{$data}}</textarea>
+                    <div class="clear"></div>
+                </p>
+
+                <div class="label-wrapper spacer">&nbsp;</div>
+                <button>
+                    Start sniping &nbsp; <i class="fa fa-play"></i>
                 </button>
             </form>
         </div>
