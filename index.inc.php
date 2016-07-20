@@ -11,6 +11,22 @@
 if (!defined('ROOTDIR')) exit;
 
 /**
+ * Basic auth
+ */
+if (isset($config['basic_auth']['user'])) {
+    $auth = $config['basic_auth'];
+    $user = is_string($_SERVER['PHP_AUTH_USER']) ? $_SERVER['PHP_AUTH_USER'] : null;
+    $pass = is_string($_SERVER['PHP_AUTH_PW']) ? $_SERVER['PHP_AUTH_PW'] : null;
+    if ($user != $auth['user'] || $pass != $auth['password'] ) {
+        header('HTTP/1.0 401 Unauthorized');
+        header('WWW-Authenticate: Basic realm="'.$auth['message'].'"');
+        echo $auth['message'];
+        exit;
+    }
+    unset($auth, $user, $pass);
+}
+
+/**
  * Debugging
  * /
 function _d($p)
