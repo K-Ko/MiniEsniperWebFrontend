@@ -34,24 +34,34 @@ ob_start('ob_gzhandler');
 // Shortcut to access configuration with $cfg_...
 extract($config, EXTR_PREFIX_ALL, 'cfg');
 
-$tpl = 'design'.DS.$cfg_design.DS.'index.html';
-$cpl = 'tmp'.DS.'index.'.$cfg_design.'.html';
+$tpl = 'design' . DS . $cfg_design . DS . 'index.html';
+$cpl = 'tmp' . DS . 'index.' . $cfg_design . '.html';
 
 if (!is_file($cpl) || filemtime($cpl) < filemtime($tpl)) {
     // Compile template
     $html = file_get_contents($tpl);
+    // Variables
     if (preg_match_all('~\{\{(\$.+?)\}\}~', $html, $matches, PREG_SET_ORDER)) {
         foreach ($matches as $match) {
             $html = str_replace($match[0], '<?php echo '.$match[1].' ?>', $html);
         }
     }
+    // Coding
     if (preg_match_all('~\{\{(.+?)\}\}~', $html, $matches, PREG_SET_ORDER)) {
         foreach ($matches as $match) {
             $html = str_replace($match[0], '<?php '.$match[1].' ?>', $html);
         }
     }
+    // Translation
+    if (preg_match_all('~\{\|(\w+)\|\}~', $html, $matches, PREG_SET_ORDER)) {
+        foreach ($matches as $match) {
+            $html = str_replace($match[0], '<?php echo isset($i18n[\''.$match[1].'\']) ? $i18n[\''.$match[1].'\'] : \'??'.$match[1].'??\' ?>', $html);
+        }
+    }
     file_put_contents($cpl, $html);
 }
+
+$i18n = require 'language'.DS.$cfg_language.'.php';
 
 include $cpl;
 

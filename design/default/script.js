@@ -4,46 +4,73 @@
  * @author     Knut Kohl <github@knutkohl.de>
  * @copyright  (c) 2016 Knut Kohl
  * @licence    MIT License - http://opensource.org/licenses/MIT
- * @version    1.0.0
  */
+$(function() {
 
-/**
- * Toggle visibility of DOM element by id
- */
-function toggle(selector, force) {
-    if (selector.substr(0,1) == '#') {
-        var e = document.getElementById(selector.substr(1));
-        if (arguments.length == 2) {
-            e.style.display = !!force ? 'block' : 'none';
-        } else {
-            e.style.display = e.style.display == 'none' ? 'block' : 'none';
-        }
-    } else if (selector.substr(0,1) == '.') {
-        var e = document.getElementsByClassName(selector.substr(1)), i = e.length;
-        // if before while
-        if (arguments.length == 2) {
-            while (i--) e[i].style.display = !!force ? 'block' : 'none';
-        } else {
-            while (i--) e[i].style.display = e[i].style.display == 'none' ? 'block' : 'none';
-        }
+    $('[rel="tooltip"]').tooltip();
+
+    if (!$('#add-form').hasClass('d-none')) {
+        // Edit auction group mode
+        $('#toggle-form').removeClass('fa-plus-circle').addClass('fa-minus-circle');
     }
-}
 
-/**
- * Hide all logs, show the one if provided
- */
-function toggleLogs(id) {
-    toggle('.log', false);
-    if (arguments.length) {
-        toggle(id, true);
-        var e = document.getElementById(id.substr(1));
-        e.scrollTop = e.scrollHeight;
-    }
-}
+    $('#toggle-form').on('click', function(e) {
+        var edit = $('#add-form');
 
-// ---------------------------------------------------------------------------
-// Hide logs only if there are more than one 
-if (document.getElementsByClassName('log').length > 1) toggleLogs();
+        // Switch visibility of auction edit form
+        edit.toggleClass('d-none');
 
-// Finally show the page
-document.body.style.opacity = 1;
+        if (!edit.hasClass('d-none')) {
+            // Edit form visible
+            $('#name').focus();
+            $(this).removeClass('fa-plus-circle').addClass('fa-minus-circle');
+        } else {
+            // Edit form invisible
+            $(this).removeClass('fa-minus-circle').addClass('fa-plus-circle');
+        }
+
+        e.preventDefault();
+    });
+
+    $('[data-toggle=log]').on('click', function(e) {
+        var el = $('#log-'+$(this).data('hash'));
+
+        if (el.hasClass('d-none')) {
+            // When open a log, hide the auction edit form
+            if (!$('#add-form').hasClass('d-none')) {
+                $('#toggle-form').trigger('click');
+            }
+            // Hide all logs
+            $('.log').addClass('d-none');
+            // Show only requested log
+            el.removeClass('d-none')
+            // Scroll log to the end
+            $('pre', el).scrollTop(el.prop('scrollHeight'));
+        } else {
+            // Close requested log
+            el.addClass('d-none');
+        }
+
+        e.preventDefault();
+    });
+
+    $('#example').on('click', function(e) {
+        $.get(
+            '/example.txt',
+            function(data) {
+                var el = $('#data'), text = el.text() + '\n';
+                el.text((text + data).trim())
+                  // Max. height 500px
+                  .css('height', Math.min(500, el.prop('scrollHeight')))
+                  .focus();
+            }
+        );
+
+        e.preventDefault();
+    });
+
+    // https://stackoverflow.com/a/31564270
+    $(window).on('beforeunload', function(){
+        $('*').css('cursor', 'progress');
+    });
+})
