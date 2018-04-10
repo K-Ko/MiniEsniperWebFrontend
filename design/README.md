@@ -36,3 +36,11 @@ will be used as is:
 ```` php
 <?php PHP code ?>
 ````
+
+## Translations
+
+C surrounded by `{|` ... `|}`
+
+    {|translation_key|}
+
+will be used from `language/<language>.php`

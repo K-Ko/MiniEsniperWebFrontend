@@ -14,16 +14,28 @@ if (!defined('ROOTDIR')) exit;
  * Basic auth
  */
 if (isset($config['basic_auth']['user'])) {
-    $auth = $config['basic_auth'];
-    $user = is_string($_SERVER['PHP_AUTH_USER']) ? $_SERVER['PHP_AUTH_USER'] : null;
-    $pass = is_string($_SERVER['PHP_AUTH_PW']) ? $_SERVER['PHP_AUTH_PW'] : null;
-    if ($user != $auth['user'] || $pass != $auth['password'] ) {
+    $user = isset($_SERVER['PHP_AUTH_USER']) ? $_SERVER['PHP_AUTH_USER'] : null;
+    $pass = isset($_SERVER['PHP_AUTH_PW'])   ? $_SERVER['PHP_AUTH_PW']   : null;
+
+    $auth  = $config['basic_auth'];
+    $found = false;
+
+    foreach ($auth['user'] as $uname => $data) {
+        if ($user == $uname && $pass == $data[0]) {
+            $found = true;
+            $config['.esniper'] = $data[1];
+            break;
+        }
+    }
+
+    if (!$found) {
         header('HTTP/1.0 401 Unauthorized');
         header('WWW-Authenticate: Basic realm="'.$auth['message'].'"');
         echo $auth['message'];
         exit;
     }
-    unset($auth, $user, $pass);
+
+    unset($auth, $pass);
 }
 
 /**
@@ -57,17 +69,24 @@ function snipes()
 {
     $snipes = array();
 
-    foreach (glob(DATADIR.'/*.txt') as $file) {
-        $data = file($file, FILE_IGNORE_NEW_LINES);
-        $name = trim($data[0], '# ');
-        $log  = DATADIR.'/'.hashname($name).'.log';
+    foreach (glob(DATADIR.'/*.txt') as $f) {
+        $data = file($f, FILE_IGNORE_NEW_LINES);
 
-        $items = array();
+        // Extract auction group name
+        $name = trim(array_shift($data), '# ');
+
+        $items = [];
+
         foreach ($data as $line) {
             // Ignore empty and comment lines
-            if ('' == $line = preg_replace('~^\s*#.*~m', '', $line)) continue;
+            if ($line == '' || preg_match('~^ *#~', $line)) {
+                continue;
+            }
+
             $items[] = explode(' ', $line)[0];
         }
+
+        $log = DATADIR.'/'.hashname($name).'.log';
 
         $snipes[$name] = array(
             'name'  => $name,
@@ -77,6 +96,7 @@ function snipes()
             'log'   => is_file($log) ? utf8_encode(trim(file_get_contents($log))) : ''
         );
     }
+
     ksort($snipes);
 
     return $snipes;
@@ -119,9 +139,10 @@ switch ($action) {
 
     // ---------------
     case 'start':
-        $data = trim(str_replace(',', '.', $data));
-
         if ($data == '') break;
+
+        // US numeric
+        $data = trim(str_replace(',', '.', $data));
 
         $cmd = sprintf(
             'esniper -bc %s %s >>%s 2>&1 &',
@@ -137,6 +158,7 @@ switch ($action) {
 //             $cmd . PHP_EOL . $sep . $data . PHP_EOL . $sep
 //         );
 
+        // Add auction group name as 1st line
         $data = '# ' . $name . PHP_EOL . $data;
 
         file_put_contents($dataFile, $data);
@@ -154,7 +176,7 @@ switch ($action) {
                  (strpos($snipes[$name]['log'], 'Sleeping for') === false) &&
                  (strpos($snipes[$name]['log'], 'Sorting auctions') === false));
 
-        $_SESSION[$name]['time'] = microtime(true) - $ts;
+        $_SESSION['start-time'] = microtime(true) - $ts;
 
         if (strpos($snipes[$name]['log'], 'Sorting auctions')) {
             // Wait another 2 seconds after "Sorting auctions" for log comes up
@@ -173,22 +195,15 @@ switch ($action) {
         break;
 
     // ---------------
-    case 'edit':
-        @unlink($logFile);
-        $data = explode(PHP_EOL, $snipes[$name]['data']);
-        array_shift($data);
-        $data = implode(PHP_EOL, $data);
-        unset($snipes[$name]);
-        break;
-
-    // ---------------
     case 'kill-edit':
         exec('kill '.$snipes[$name]['pid']);
         $snipes = snipes();
+        // DON'T BREAK, run through to 'edit'!'
+
+    // ---------------
+    case 'edit':
         @unlink($logFile);
-        $data = explode(PHP_EOL, $snipes[$name]['data']);
-        array_shift($data);
-        $data = implode(PHP_EOL, $data);
+        $data = $snipes[$name]['data'];
         unset($snipes[$name]);
         break;
 
