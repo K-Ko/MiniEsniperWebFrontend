@@ -8,212 +8,206 @@
  * @version    1.0.0
  */
 ?>
-<!DOCTYPE HTML>
-<html>
+<!DOCTYPE html>
+<html lang="de">
 <head>
-    <meta http-equiv="content-type" content="text/html; charset=utf-8">
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>{{$cfg_title}}</title>
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.5.0/css/font-awesome.min.css">
-    <link rel="stylesheet" href="assets/normalize.css">
-    <link rel="stylesheet" href="assets/tooltip.css">
-    <link rel="stylesheet" href="design/{{$cfg_design}}/style.css">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.0.9/css/all.css" integrity="sha384-5SOiIsAziJl6AWe0HWRKTXlfcSHKmYV4RBF18PPJ173Kzn7jzMyFuTtk8JA7QQG1" crossorigin="anonymous">    <link rel="stylesheet" href="design/{{$cfg_design}}/style.css">
 </head>
-<!-- Initially hide body to avoid flicker until JS collapse logs is finished -->
-<body style="opacity:0">
+<body>
 
-    <!-- Navigation -->
-    <section id="nav">
-        <div class="container">
-            <div id="github">
-                Minimal
-                <a href="http://esniper.sourceforge.net/" target="_blank">
-                    <i class="fa fa-external-link"> esniper</i>
-                </a>
-                web frontend
-                <br>
-                v{{$cfg_version}} on
-                <a href="https://github.com/K-Ko/MiniEsniperWebFrontend" target="_blank">
-                    <i class="fa fa-github"> GitHub</i>
-                </a>
-            </div>
-
-            <a href="/" class="fl fa fa-refresh fa-2x tooltip">
-                <span>Reload page</span>
-            </a>
-            <a id="toggle-form" href="#" class="fa fa-plus-circle fa-2x tooltip"
-               onclick="toggle('#addform'); return false;">
-                <span>Add auctions</span>
-            </a>
-
-            <div class="clear"></div>
+<div class="container mt-3">
+    <div class="row">
+        <div class="col">
+            <a id="toggle-form" href="#" class="btn fa fa-plus-circle fa-2x" rel="tooltip" title="{|toggle_form|}"></a>
         </div>
-    </section>
+        <div class="col text-center">
+            <span class="d-sm-none">{{$user}}</span>
+            <span class="d-none d-sm-inline h2">{{$user}}</span>
+        </div>
+        <div class="col text-right">
+            <a href="/" class="btn fa fa-sync fa-2x" rel="tooltip" title="{|reload_page|}"></a>
+        </div>
+    </div>
 
     <!-- Add auctions form start, show if no sniping group is defined yet -->
-    <section id="addform"
-        {{if (!empty($snipes) && empty($name)) echo 'style="display:none"'}}
-    >
-        <div class="container">
-            <form method="post" accept-charset="utf-8">
-                <input type="hidden" name="action" value="start">
-                <p>
-                    <div class="label-wrapper">
-                        <label for="name-input">Auction group name</label>
-                        <span class="tooltip">
-                            <i class="fa fa-question"></i>
-                            <span>Auction groups will be sorted alphabetic.</span>
-                        </span>
-                    </div>
-                    <input id="name-input" type="text" name="name" value="{{$name}}">
-                    <div class="clear"></div>
-                </p>
+    <form method="post" accept-charset="utf-8">
+    <input type="hidden" name="action" value="start">
 
-                <p>
-                    <div class="label-wrapper">
-                        <label for="data-text">Auction(s)</label>
-                        <small>
-                            (<a href="http://esniper.sourceforge.net/sample_auction.txt" class="tooltip"
-                                target="_blank">example<span>Auction file example</span></a>)
-                        </small>
-                        <span class="tooltip">
-                            <i class="fa fa-question"></i>
-                            <span>
-                                Each auction line contains an auction number,
-                                optionally followed by a bid price.<br />
-                                If no bid price is given, the auction number uses the bid price
-                                of the first prior auction line that contains a bid price.
-                            </span>
-                        </span>
-                    </div>
-                    <textarea id="data-text" class="data" name="data">{{$data}}</textarea>
-                    <div class="clear"></div>
-                </p>
+    <div id="add-form" class="row {{if (!empty($snipes) && empty($name)) echo 'd-none'}}">
+        <div class="col">
+            <hr>
+            <div class="form-group row">
+                <label class="col-md-3 col-form-label" for="name">{|group_name|}</label>
+                <div class="col-md-9">
+                    <input type="text" id="name" class="form-control" name="name" value="{{$name}}" required {{if ($name):}}readonly{{endif}}>
+                    <small class="form-text text-muted">{|group_hint|}</small>
+                </div>
+            </div>
 
-                <div class="label-wrapper spacer">&nbsp;</div>
-                <button>
-                    Start sniping &nbsp; <i class="fa fa-play"></i>
-                </button>
-            </form>
+            <div class="form-group row">
+                <div class="col-md-3">
+                    <label class="col-form-label" for="data">{|auctions|}</label>
+                    <small class="form-text text-muted">
+                        <a id="example" href="#">{|example|}</a>
+                    </small>
+                </div>
+                <div class="col-md-9">
+                    <textarea id="data" class="form-control" style="height:10rem" name="data" required>{{$data}}</textarea>
+                    <small class="form-text text-muted">{|auction_hint|}</small>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-md-3"></div>
+                <div class="col-md-9">
+                    <button class="btn btn-primary">{|start|}</button>
+                </div>
+            </div>
         </div>
-        <hr />
-    </section>
-    <!-- Entry form end -->
+    </div>
+
+    </form>
+
+    {{if (isset($_SESSION['start-time'])):}}
+    <div class="row mt-3">
+        <div class="col">
+            <div class="alert alert-success" role="alert">
+                esniper started in {{printf('%.1f', $_SESSION['start-time'])}} sec.
+            </div>
+        </div>
+    </div>
+    {{unset($_SESSION['start-time'])}}
+    {{endif}}
 
     <!-- Sniping groups start-->
-    {{foreach ($snipes as $name=>$snipe): $hash = substr(md5($name), -7)}}
-    <section>
-        <div class="container">
-
-            <div class="fl h1">
-                <a href="#" class="tooltip run-{{echo (int) !!$snipe['pid'];}}"
-                   onclick="toggleLogs('#{{$hash}}');">
-                    {{$name}}
-                    <span>Show esniper protocol file</span>
-                </a>
-            </div>
-
-            <div class="fl">
-
-                <!-- Action buttons -->
-                {{if ($snipe['pid']):}}
-                <!-- esniper process IS running -->
-                <form method="post">
-                    <input type="hidden" name="action" value="kill-edit">
-                    <input type="hidden" name="name" value="{{$name}}">
-                    <button class="tooltip">
-                        <i class="fa fa-pencil"></i>
-                        <span>Cancel active snipe &amp; edit sniping group</span>
-                    </button>
-                </form>
-                <form method="post">
-                    <input type="hidden" name="action" value="kill">
-                    <input type="hidden" name="name" value="{{$name}}">
-                    <button class="tooltip">
-                        <i class="fa fa-ban"></i>
-                        <span>Cancel active snipe</span>
-                    </button>
-                </form>
-                {{else:}}
-                <!-- esniper process IS NOT running -->
-                <form method="post">
-                    <input type="hidden" name="action" value="edit">
-                    <input type="hidden" name="name" value="{{$name}}">
-                    <button class="tooltip">
-                        <i class="fa fa-pencil"></i>
-                        <span>Edit sniping group</span>
-                    </button>
-                </form>
-                <form method="post">
-                    <input type="hidden" name="action" value="remove">
-                    <input type="hidden" name="name" value="{{$name}}">
-                    <button class="tooltip">
-                        <i class="fa fa-trash"></i>
-                        <span>Remove sniping group &amp; log</span>
-                    </button>
-                </form>
-                {{endif}}
-            </div>
-
-            <div class="fl">
-                <!-- ebay auction links -->
-                {{foreach ($snipe['items'] as $item):}}
-                <a href="http://search.ebay.{{$cfg_ebay}}/{{$item}}"
-                   class="fa fa-external-link ebay tooltip" target="_blank">
-                   {{echo substr($item, -3);}}
-                   <span>Show auction {{$item}} on ebay</span>
-                </a>
+    {{if (count($snipes)):}}
+    <div class="row mt-3">
+        <div class="col">
+            <table class="table">
+                <tbody>
+                {{foreach ($snipes as $name => $snipe): $hash = substr(md5($name), -7)}}
+                <tr class="table-{{echo (int) !!$snipe['pid'] ? 'success' : 'warning'}}">
+                    <th class="pt-2 pointer" data-toggle="log" data-hash="{{$hash}}" rel="tooltip" title="{|show_log|}">
+                        {{$name}}
+                    </th>
+                    <td class="small">
+                        <!-- ebay auction links -->
+                        {{foreach ($snipe['items'] as $item):}}
+                        <a href="https://www.ebay.{{$cfg_ebay}}/itm/{{$item}}" class="mr-2"
+                           rel="tooltip" title="{|ebay_auction|} {{$item}}" target="_blank">
+                           <i class="fa fa-external-link-alt"></i>
+                           {{echo substr($item, -3)}}
+                        </a>
+                        {{endforeach}}
+                    </td>
+                    <td class="text-right">
+                        <!-- Action buttons -->
+                        {{if ($snipe['pid']):}}
+                        <!-- esniper process IS running -->
+                        <form method="post">
+                            <input type="hidden" name="action" value="kill-edit">
+                            <input type="hidden" name="name" value="{{$name}}">
+                            <button class="btn" rel="tooltip" title="Cancel active snipe &amp; edit sniping group">
+                                <i class="fa fa-edit"></i>
+                            </button>
+                        </form>
+                        <form method="post">
+                            <input type="hidden" name="action" value="kill">
+                            <input type="hidden" name="name" value="{{$name}}">
+                            <button class="btn" rel="tooltip" title="Cancel active snipe">
+                                <i class="fa fa-ban"></i>
+                            </button>
+                        </form>
+                        {{else:}}
+                        <!-- esniper process IS NOT running -->
+                        <form method="post">
+                            <input type="hidden" name="action" value="edit">
+                            <input type="hidden" name="name" value="{{$name}}">
+                            <button class="btn" rel="tooltip" title="Edit sniping group">
+                                <i class="fa fa-edit"></i>
+                            </button>
+                        </form>
+                        <form method="post">
+                            <input type="hidden" name="action" value="remove">
+                            <input type="hidden" name="name" value="{{$name}}">
+                            <button class="btn" rel="tooltip" title="Remove sniping group &amp; log">
+                                <i class="fa fa-trash"></i>
+                            </button>
+                        </form>
+                        {{endif}}
+                    </td>
+                </tr>
+                <tr id="log-{{$hash}}" class="log d-none">
+                    <td colspan="3" class="p-0">
+                        <!-- esniper prtocol file -->
+                        <pre class="p-2 mb-0">{{if ($snipe['log']):}}{{$snipe['log']}}{{else:}}No auction log{{endif}}</pre>
+                    </td>
+                </tr>
                 {{endforeach}}
-            </div>
+                </tbody>
+            </table>
         </div>
-
-        <div class="clear"></div>
-
-        <!-- esniper start time -->
-        {{if (isset($_SESSION[$name]['time'])):}}
-        <div class="container">
-            {{printf('esniper started in %.1f seconds.', $_SESSION[$name]['time']);}}
-        </div>
-        {{unset($_SESSION[$name]['time'])}}
-        {{endif}}
-
-        <!-- esniper prtocol file -->
-        <div class="container">
-            <div id="{{$hash}}" class="container log">{{$snipe['log']}}</div>
-        </div>
-
-        {{endforeach}}
-    </section>
+    </div>
+    {{endif}}
     <!-- Sniping groups end -->
 
     {{if (count($bugs)):}}
-    <section>
-        <p class="h1">
-            esniper bug reports
-        </p>
+    <div class="row">
+        <div class="col">
+            <p class="h1">
+                esniper bug reports
+            </p>
 
-        <form method="post">
-        <input type="hidden" name="action" value="bug">
+            <form method="post">
+            <input type="hidden" name="action" value="bug">
 
-        {{foreach ($bugs as $bug):}}
-        <p>
-            <input type="checkbox" name="bug[]" value="{{$bug}}">
-            &nbsp;
-            <a href="{{$bug}}" class="tooltip" target="_blank">
-               <i class="fa fa-external-link"></i>
-               {{$bug}}
-               <span>Show esniper bug report</span>
-            </a>
-        </p>
-        {{endforeach}}
-        <button>
-            <i class="fa fa-trash"></i> &nbsp; Delete esniper bug report(s)
-        </button>
-        </form>
-    </section>
+            {{foreach ($bugs as $bug):}}
+            <p>
+                <input type="checkbox" name="bug[]" value="{{$bug}}">
+                &nbsp;
+                <a href="{{$bug}}" class="tooltip" target="_blank">
+                   <i class="fa fa-external-link-alt"></i>
+                   {{$bug}}
+                   <span>Show esniper bug report</span>
+                </a>
+            </p>
+            {{endforeach}}
+            <button>
+                <i class="fa fa-trash"></i> &nbsp; Delete esniper bug report(s)
+            </button>
+            </form>
+        </div>
+    </div>
     {{endif}}
 
-    <script src="design/{{$cfg_design}}/script.js"></script>
+    <footer class="row small">
+        <div class="col-12">
+        <hr>
+        </div>
+        <div class="col-6 pl-4">
+            Minimal
+            <a href="http://esniper.sourceforge.net/" target="_blank">
+                <i class="fa fa-external-link-alt"></i> esniper
+            </a>
+            web frontend
+        </div>
+        <div class="col-6 text-right pr-4">
+            v{{$cfg_version}} on
+            <a href="https://github.com/K-Ko/MiniEsniperWebFrontend" target="_blank">
+                <i class="fab fa-github"></i> GitHub
+            </a>
+        </div>
+    </footer>
+
+</div>
+
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.bundle.min.js"></script>
+<script src="design/{{$cfg_design}}/script.js"></script>
 
 </body>
 </html>

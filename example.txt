@@ -1,0 +1,24 @@
+# http://esniper.sourceforge.net/sample_auction.txt
+
+# Sample auction file for laser printer cartridges
+
+# I'd like 10 of them, and my target price is $50
+quantity = 10
+
+# seller surpluslaserjunk, shipping $15, questionable reputation
+# (so I'll only pay $40 total)
+9298389738 25
+9872749829
+9872972987
+
+# seller highqualityprintersupplies, shipping $8, excellent reputation
+9982309829 42
+9827349827
+
+# seller nonbusinesshomeseller, good reputation
+# shipping not mentioned, assume $10
+9287398473 35
+
+# seller lasersuppliesforcheap, lousy reputation,
+# don't buy!!!
+#9239889372 0
