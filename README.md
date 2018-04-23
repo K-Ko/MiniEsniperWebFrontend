@@ -8,20 +8,26 @@ See the [manual page](http://esniper.sourceforge.net/esniper_man.html) for refer
 
 For auction definition see the [example auction file](http://esniper.sourceforge.net/sample_auction.txt).
 
-Your configuration file (usually `~/.esniper`) must contain only
+## Configuration
 
-    username = <your ebay account name>
-    password = <your password here>
+If you need to adjust configuration settings, don't change `config.default.php`, make a local copy
 
-If you have another esniper config file or want to protect the installation with basic auth, copy `config.default.php`
+    # cp config.default.php config.local.php
 
-    # cp config.default.php config.php
+and adjust the settings there.
 
-and adjust the settings.
-
-> Your installation directory must be writable for the web server running user, a unique data directory for file storage will be created on 1st run.
+> If you don't change the location for the data directory, your installation directory must be **writable
+> for the web server running user**. A unique data directory for file storage will than be created here on 1st run.
+>
+> Directory `design_cpl` must also be writable to store the compiled templates.
 
 ## Usage
+
+### Login
+
+"Login" with your ebay username and password.
+This will not checked, only used for esniper starts.
+Credentials will be stored in session only.
 
 ### Add auctions
 
@@ -43,3 +49,11 @@ This will stop the running esniper process for this group and you can adjust the
   - Click on the trash button near the auction group name.
 
 This will remove the auction group and the log file.
+
+## Hooks
+
+When needed, the system can be extended by hooks, see `index.php` for available hooks
+
+    Hook::apply(...);
+
+and `hooks.dist.php` for examples.
