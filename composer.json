@@ -1,0 +1,18 @@
+{
+    "require": {
+        "twitter/bootstrap": "^4.0"
+    },
+    "require-dev": {
+        "squizlabs/php_codesniffer": "*"
+    },
+    "autoload": {
+        "psr-4": {
+            "": "app/"
+        }
+    },
+    "scripts": {
+        "post-update-cmd": "app/composer-post-update",
+        "cs": "vendor/bin/phpcs -p -s --standard=PSR2 --tab-width=4 ./*.php app/",
+        "cbf": "vendor/bin/phpcbf -p --standard=PSR2 --tab-width=4 ./*.php app/"
+    }
+}
