@@ -1,6 +1,19 @@
 <?php
-
+/**
+ *
+ *
+ * @author     Knut Kohl <github@knutkohl.de>
+ * @copyright  (c) 2016 Knut Kohl
+ * @licence    MIT License - http://opensource.org/licenses/MIT
+ */
 return [
+
+    'ebay_user'         => 'E-Mail-Adresse oder Nutzername',
+    'ebay_pass'         => 'Passwort',
+
+    'login'             => 'Einloggen',
+    'welcome'           => 'Willkommen',
+    'logout'            => 'Abmelden',
 
     'toggle_form'       => 'Erfassungsformular anzeigen/verstecken',
     'reload_page'       => 'Seite neu laden',
@@ -16,9 +29,16 @@ return [
                             Auktionsnummer den Gebotspreis der ersten vorherigen
                             Auktionszeile, die einen Gebotspreis enthält',
 
-    'start'             => 'Start Sniping',
+    'start'             => 'Sichern &amp; Starten',
+    'save'              => 'Sichern',
 
-    'show_log'          => 'Zeige esniper Protocoldatei',
+    'show_log'          => 'esniper Protokolldatei',
+    'won'               => 'GEWONNEN!',
 
     'ebay_auction'      => 'ebay Auktion',
+
+    'edit_group'        => 'Auktionsgruppe ändern',
+    'stop_snipe'        => 'Stoppe aktiven esniper',
+    'remove_group'      => 'Auktionsgruppe und Logdatei löschen',
+
 ];

@@ -1,0 +1,15 @@
+{
+    "name": "Minimal esniper frontend",
+    "short_name": "MEF",
+    "lang": "de-DE",
+    "start_url": "/",
+    "display": "standalone",
+    "theme_color": "#0F6DF6",
+    "icons": [
+        {
+            "src": "favicon.ico",
+            "sizes": "64x64",
+            "type": "image/ico"
+        }
+    ]
+}
