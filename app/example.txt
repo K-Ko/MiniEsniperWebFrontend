@@ -1,5 +1,8 @@
 # http://esniper.sourceforge.net/sample_auction.txt
 
+# Did x seconds before end time
+seconds = 10
+
 # Sample auction file for laser printer cartridges
 
 # I'd like 10 of them, and my target price is $50

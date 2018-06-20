@@ -1,6 +1,21 @@
 <?php
-
+/**
+ * English localization
+ *
+ * @author     Knut Kohl <github@knutkohl.de>
+ * @copyright  (c) 2016 Knut Kohl
+ * @licence    MIT License - http://opensource.org/licenses/MIT
+ */
 return [
+
+    'ebay_user'         => 'Email or username',
+    'ebay_pass'         => 'Password',
+    'language'          => 'Language',
+
+    'login'             => 'Sign in',
+    'welcome'           => 'Welcome',
+    'invalid_user'      => 'Invalid user, no login allowed',
+    'logout'            => 'Logout',
 
     'toggle_form'       => 'Toggle auctions form',
     'reload_page'       => 'Reload page',
@@ -16,20 +31,16 @@ return [
                             the bid price of the first prior auction line that
                             contains a bid price',
 
-    'start'             => 'Start sniping',
+    'start'             => 'Save &amp; Start',
+    'save'              => 'Save',
 
-    'show_log'          => 'Show esniper protocol file',
+    'show_log'          => 'esniper protocol file',
+    'won'               => 'WON!',
 
     'ebay_auction'      => 'ebay auction',
-    '' => '',
-    '' => '',
-    '' => '',
-    '' => '',
-    '' => '',
-    '' => '',
-    '' => '',
-    '' => '',
-    '' => '',
-    '' => '',
-    '' => '',
+
+    'edit_group'        => 'Edit sniping group',
+    'stop_snipe'        => 'Stop active esniper',
+    'remove_group'      => 'Remove sniping group &amp; log',
+
 ];

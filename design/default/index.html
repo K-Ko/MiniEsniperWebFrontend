@@ -1,213 +1,70 @@
-<?php
+<!--
 /**
  * Main HTML file
  *
  * @author     Knut Kohl <github@knutkohl.de>
  * @copyright  (c) 2016 Knut Kohl
  * @licence    MIT License - http://opensource.org/licenses/MIT
- * @version    1.0.0
  */
-?>
+-->
 <!DOCTYPE html>
-<html lang="de">
+<html lang="{{$config->language}}">
+
 <head>
+    <!-- https://tomitm.github.io/appmanifest/ -->
+    <link rel="manifest" href="manifest.json">
+    <meta name="mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="application-name" content="MEF">
+    <meta name="apple-mobile-web-app-title" content="MEF">
+    <meta name="theme-color" content="#0F6DF6">
+    <meta name="msapplication-navbutton-color" content="#0F6DF6">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="msapplication-starturl" content="/">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <link rel="icon" type="image/ico" sizes="64x64" href="favicon.ico">
+    <link rel="apple-touch-icon" type="image/ico" sizes="64x64" href="favicon.ico">
+
     <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>{{$cfg_title}}</title>
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
-    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.0.9/css/all.css" integrity="sha384-5SOiIsAziJl6AWe0HWRKTXlfcSHKmYV4RBF18PPJ173Kzn7jzMyFuTtk8JA7QQG1" crossorigin="anonymous">    <link rel="stylesheet" href="design/{{$cfg_design}}/style.css">
+    <title>{{$config->title}}</title>
+
+    <link rel="stylesheet" href="/design/default/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.0.10/css/all.css" integrity="sha384-+d0P83n9kaQMCwj8F4RJB66tzIwOKmrdb46+porD/OvrJ+37WqIM7UoBtwHO6Nlg"
+        crossorigin="anonymous">
+    <link rel="stylesheet" href="/design/default/css/style.css">
+
+    <style>{{echo mef\Hook::apply('head.style')}}</style>
+    <script>{{echo mef\Hook::apply('head.script')}}</script>
 </head>
+
 <body>
 
-<div class="container mt-3">
-    <div class="row">
-        <div class="col">
-            <a id="toggle-form" href="#" class="btn fa fa-plus-circle fa-2x" rel="tooltip" title="{|toggle_form|}"></a>
-        </div>
-        <div class="col text-center">
-            <span class="d-sm-none">{{$user}}</span>
-            <span class="d-none d-sm-inline h2">{{$user}}</span>
-        </div>
-        <div class="col text-right">
-            <a href="/" class="btn fa fa-sync fa-2x" rel="tooltip" title="{|reload_page|}"></a>
-        </div>
-    </div>
+    <div class="container mt-3">
+        {{echo mef\Hook::apply('before.content')}}
 
-    <!-- Add auctions form start, show if no sniping group is defined yet -->
-    <form method="post" accept-charset="utf-8">
-    <input type="hidden" name="action" value="start">
-
-    <div id="add-form" class="row {{if (!empty($snipes) && empty($name)) echo 'd-none'}}">
-        <div class="col">
-            <hr>
-            <div class="form-group row">
-                <label class="col-md-3 col-form-label" for="name">{|group_name|}</label>
-                <div class="col-md-9">
-                    <input type="text" id="name" class="form-control" name="name" value="{{$name}}" required {{if ($name):}}readonly{{endif}}>
-                    <small class="form-text text-muted">{|group_hint|}</small>
-                </div>
-            </div>
-
-            <div class="form-group row">
-                <div class="col-md-3">
-                    <label class="col-form-label" for="data">{|auctions|}</label>
-                    <small class="form-text text-muted">
-                        <a id="example" href="#">{|example|}</a>
-                    </small>
-                </div>
-                <div class="col-md-9">
-                    <textarea id="data" class="form-control" style="height:10rem" name="data" required>{{$data}}</textarea>
-                    <small class="form-text text-muted">{|auction_hint|}</small>
-                </div>
-            </div>
-
-            <div class="row">
-                <div class="col-md-3"></div>
-                <div class="col-md-9">
-                    <button class="btn btn-primary">{|start|}</button>
+        {{if (isset($_SESSION['message'])):}}
+        <div class="row mt-3">
+            <div class="col">
+                <div class="alert alert-{{$_SESSION['message']['class']}}" role="alert">
+                    <button type="button" class="close" data-dismiss="alert" aria-label="close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                    {{$_SESSION['message']['text']}}
                 </div>
             </div>
         </div>
+        {{unset($_SESSION['message'])}}
+        {{endif}}
+
+        {{include 'design_cpl/' . $config->design . '.' . $page . '.html'}}
+
+        {{echo mef\Hook::apply('after.content')}}
     </div>
 
-    </form>
-
-    {{if (isset($_SESSION['start-time'])):}}
-    <div class="row mt-3">
-        <div class="col">
-            <div class="alert alert-success" role="alert">
-                esniper started in {{printf('%.1f', $_SESSION['start-time'])}} sec.
-            </div>
-        </div>
-    </div>
-    {{unset($_SESSION['start-time'])}}
-    {{endif}}
-
-    <!-- Sniping groups start-->
-    {{if (count($snipes)):}}
-    <div class="row mt-3">
-        <div class="col">
-            <table class="table">
-                <tbody>
-                {{foreach ($snipes as $name => $snipe): $hash = substr(md5($name), -7)}}
-                <tr class="table-{{echo (int) !!$snipe['pid'] ? 'success' : 'warning'}}">
-                    <th class="pt-2 pointer" data-toggle="log" data-hash="{{$hash}}" rel="tooltip" title="{|show_log|}">
-                        {{$name}}
-                    </th>
-                    <td class="small">
-                        <!-- ebay auction links -->
-                        {{foreach ($snipe['items'] as $item):}}
-                        <a href="https://www.ebay.{{$cfg_ebay}}/itm/{{$item}}" class="mr-2"
-                           rel="tooltip" title="{|ebay_auction|} {{$item}}" target="_blank">
-                           <i class="fa fa-external-link-alt"></i>
-                           {{echo substr($item, -3)}}
-                        </a>
-                        {{endforeach}}
-                    </td>
-                    <td class="text-right">
-                        <!-- Action buttons -->
-                        {{if ($snipe['pid']):}}
-                        <!-- esniper process IS running -->
-                        <form method="post">
-                            <input type="hidden" name="action" value="kill-edit">
-                            <input type="hidden" name="name" value="{{$name}}">
-                            <button class="btn" rel="tooltip" title="Cancel active snipe &amp; edit sniping group">
-                                <i class="fa fa-edit"></i>
-                            </button>
-                        </form>
-                        <form method="post">
-                            <input type="hidden" name="action" value="kill">
-                            <input type="hidden" name="name" value="{{$name}}">
-                            <button class="btn" rel="tooltip" title="Cancel active snipe">
-                                <i class="fa fa-ban"></i>
-                            </button>
-                        </form>
-                        {{else:}}
-                        <!-- esniper process IS NOT running -->
-                        <form method="post">
-                            <input type="hidden" name="action" value="edit">
-                            <input type="hidden" name="name" value="{{$name}}">
-                            <button class="btn" rel="tooltip" title="Edit sniping group">
-                                <i class="fa fa-edit"></i>
-                            </button>
-                        </form>
-                        <form method="post">
-                            <input type="hidden" name="action" value="remove">
-                            <input type="hidden" name="name" value="{{$name}}">
-                            <button class="btn" rel="tooltip" title="Remove sniping group &amp; log">
-                                <i class="fa fa-trash"></i>
-                            </button>
-                        </form>
-                        {{endif}}
-                    </td>
-                </tr>
-                <tr id="log-{{$hash}}" class="log d-none">
-                    <td colspan="3" class="p-0">
-                        <!-- esniper prtocol file -->
-                        <pre class="p-2 mb-0">{{if ($snipe['log']):}}{{$snipe['log']}}{{else:}}No auction log{{endif}}</pre>
-                    </td>
-                </tr>
-                {{endforeach}}
-                </tbody>
-            </table>
-        </div>
-    </div>
-    {{endif}}
-    <!-- Sniping groups end -->
-
-    {{if (count($bugs)):}}
-    <div class="row">
-        <div class="col">
-            <p class="h1">
-                esniper bug reports
-            </p>
-
-            <form method="post">
-            <input type="hidden" name="action" value="bug">
-
-            {{foreach ($bugs as $bug):}}
-            <p>
-                <input type="checkbox" name="bug[]" value="{{$bug}}">
-                &nbsp;
-                <a href="{{$bug}}" class="tooltip" target="_blank">
-                   <i class="fa fa-external-link-alt"></i>
-                   {{$bug}}
-                   <span>Show esniper bug report</span>
-                </a>
-            </p>
-            {{endforeach}}
-            <button>
-                <i class="fa fa-trash"></i> &nbsp; Delete esniper bug report(s)
-            </button>
-            </form>
-        </div>
-    </div>
-    {{endif}}
-
-    <footer class="row small">
-        <div class="col-12">
-        <hr>
-        </div>
-        <div class="col-6 pl-4">
-            Minimal
-            <a href="http://esniper.sourceforge.net/" target="_blank">
-                <i class="fa fa-external-link-alt"></i> esniper
-            </a>
-            web frontend
-        </div>
-        <div class="col-6 text-right pr-4">
-            v{{$cfg_version}} on
-            <a href="https://github.com/K-Ko/MiniEsniperWebFrontend" target="_blank">
-                <i class="fab fa-github"></i> GitHub
-            </a>
-        </div>
-    </footer>
-
-</div>
-
-<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
-<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.bundle.min.js"></script>
-<script src="design/{{$cfg_design}}/script.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+    <script src="/design/default/js/bootstrap.bundle.min.js"></script>
+    <script src="design/default/js/script.js"></script> {{echo mef\Hook::apply('body.script')}}
 
 </body>
+
 </html>

@@ -4,9 +4,7 @@
  * @author     Knut Kohl <github@knutkohl.de>
  * @copyright  (c) 2016 Knut Kohl
  * @licence    MIT License - http://opensource.org/licenses/MIT
- * @version    1.0.0
  */
-
 body {
     font-family: Helvetia, Arial, sans-serif;
 }
@@ -19,12 +17,12 @@ form {
     display: inline;
 }
 
-a {
+a, .btn-link {
     text-decoration: none !important;
     color: maroon;
 }
 
-a.fa {
+.header .fa {
     color: dimgrey;
 }
 
@@ -32,11 +30,14 @@ a.fa {
     cursor: pointer;
 }
 
-textarea,
-pre {
-    font-family: monospace;
-    font-size: 100%;
-    white-space: pre;
+.user span {
+    vertical-align: middle;
+    margin-right: 1rem;
+}
+
+#data {
+    font-family: Consolas, 'Courier New', Courier, monospace;
+    min-height: 4rem;
 }
 
 textarea,
@@ -44,9 +45,13 @@ input[type=text] {
     padding: .25em .5em;
 }
 
-pre {
-    width: 100%;
+.pre {
+    font-family: monospace;
+    white-space: pre-wrap;
     max-height: 25em;
     overflow: auto;
-    white-space: pre-wrap;
+}
+
+.loading {
+    opacity: 0.25;
 }
