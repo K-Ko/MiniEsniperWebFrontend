@@ -120,12 +120,12 @@ class Snipe
     /**
      * Save auction group data to file
      *
-     * @return instance $this
+     * @return integer Size of written file on success
      */
     public function save()
     {
         if ($this->name != '' && $this->data != '') {
-            file_put_contents(
+            return file_put_contents(
                 $this->getFileName('ini'),
                 sprintf(
                     'name = "%2$s"%1$s%1$sdata = "%3$s%1$s"%1$s',
@@ -136,7 +136,7 @@ class Snipe
             );
         }
 
-        return $this;
+        return 0;
     }
 
     /**
@@ -175,7 +175,8 @@ class Snipe
 
         // Put all together ...
         $cmd = sprintf(
-            'nohup %s -b -c %s %s >>%s 2>&1 & echo -n $! >%s',
+            'cd %s && nohup %s -b -c %s %s >>%s 2>&1 & echo -n $! >%s',
+            User::$dir,
             $this->config->esniper,
             $confFile,
             $dataFile,
@@ -338,8 +339,7 @@ class Snipe
         $file = $this->getFileName('log');
 
         if (is_file($file)) {
-            $log = utf8_encode(file_get_contents($file));
-#            $log = file_get_contents($file);
+            $log = file_get_contents($file);
 
             // Auction won?
             if (preg_match('~won \d+ item~', $log) &&
@@ -347,8 +347,11 @@ class Snipe
                 // Get last and your max. price from list
                 $last = array_slice($args[1], -1)[0];
                 $your = $args[2][0];
-                $this->won = $your >= $last ? sprintf('%.2f (%.2f)', $last, $your) : '';
-                $log .= PHP_EOL . sprintf('You paid %d%% of your maximum bid.', $last/$your*100);
+
+                if ($your >= $last) {
+                    $this->won = sprintf('%.2f (%.2f)', $last, $your);
+                    $log .= PHP_EOL . sprintf('You paid %d%% of your maximum bid.', $last/$your*100);
+                }
             }
 
             return $log;

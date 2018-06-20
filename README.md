@@ -14,7 +14,7 @@ If you need to adjust configuration settings, don't change `config.default.php`,
 
     # cp config.default.php config.local.php
 
-and adjust the settings there.
+and adjust the settings for your needs.
 
 > If you don't change the location for the data directory, your installation directory must be **writable
 > for the web server running user**. A unique data directory for file storage will than be created here on 1st run.
@@ -57,3 +57,11 @@ When needed, the system can be extended by hooks, see `index.php` for available 
     Hook::apply(...);
 
 and `hooks.dist.php` for examples.
+
+## Translations
+
+* Checkout a new branch
+* Copy `language/en.php` to your language shortcut
+* Translate the items
+* Add your language to `config.default.php` (with locales if needed)
+* Make a pull request :-)

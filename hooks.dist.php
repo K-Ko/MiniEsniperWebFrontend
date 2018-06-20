@@ -94,7 +94,7 @@ mef\Hook::register(
             '~^(.*)Sleeping for a day~m'                => PHP_EOL . '$1Schlafe für einen Tag',
             '~^(.*)Sleeping for~m'                      => PHP_EOL . '$1Schlafe für',
             '~won ([1-9]\d*) item\(s\)~'                => '$1 Artikel gewonnen',
-            '~won .* item\(s\)~'                        => 'Leider nicht gewonnen',
+            '~won .* item\(s\)~'                        => 'Nicht gewonnen',
         ];
 
         foreach ($trans as $regex => $replace) {

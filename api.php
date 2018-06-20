@@ -43,8 +43,58 @@ if ($snipe = $snipes->find($GET['token'])) {
 
             break;
     } // switch
+
+    // Auction group related actions return always JSON content
+    header('Content-Type: application/json');
+    $result = json_encode($result);
+} else {
+    // Merge add. parameters in
+    $GET = array_merge($GET, filter_input_array(
+        INPUT_GET,
+        [
+            'bug'  => FILTER_SANITIZE_STRING,
+            'name' => FILTER_SANITIZE_STRING,
+            'item' => FILTER_SANITIZE_STRING
+        ],
+        true
+    ));
+
+    switch ($GET['api']) {
+        // ---------------
+        case 'bug':
+            // Bug file contents
+            $bug = mef\User::$dir.'/'.$GET['bug'];
+            if (is_file($bug)) {
+                $result = file_get_contents($bug);
+            }
+
+            break;
+        // ---------------
+        case 'bookmark':
+            // Need user for snipe instance to have a data path
+            mef\User::init($GET['token'], null);
+
+            // Trim auction title title to max. 40 chars, don't split words
+            $name = substr($GET['name'], 0, 40);
+            while (strlen($name) && substr($name, -1) != ' ') {
+                $name = substr($name, 0, -1);
+            }
+
+            $snipe = new mef\Snipe(
+                trim($name),
+                '# Define your price #' . PHP_EOL . $GET['item']
+            );
+
+            $result = $snipe->save()
+                    ? 'Added auction group<br><br><strong>' . $name . '</strong>'
+                    : 'Failed, something went wrong :-(';
+
+            $result = '<html><body style="padding:1rem;font-family:sans-serif">'
+                    . $result
+                    . '</body></html>';
+
+            break;
+    } // switch
 }
 
-header('Content-Type: application/json');
-
-die(json_encode($result));
+die($result);

@@ -22,11 +22,6 @@ class Config
     {
         if (!isset(self::$instance)) {
             self::$instance = new self;
-            // Init data directory in root directory
-            self::$instance->set(
-                'dataDir',
-                dirname(dirname(__DIR__)) . '/.d' . substr(md5(__DIR__), -11)
-            );
         }
 
         return self::$instance;

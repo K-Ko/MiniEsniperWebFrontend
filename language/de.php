@@ -1,6 +1,6 @@
 <?php
 /**
- *
+ * German localization
  *
  * @author     Knut Kohl <github@knutkohl.de>
  * @copyright  (c) 2016 Knut Kohl
@@ -10,9 +10,11 @@ return [
 
     'ebay_user'         => 'E-Mail-Adresse oder Nutzername',
     'ebay_pass'         => 'Passwort',
+    'language'          => 'Sprache',
 
     'login'             => 'Einloggen',
     'welcome'           => 'Willkommen',
+    'invalid_user'      => 'Ungültiger Benutzer, kein Login erlaubt',
     'logout'            => 'Abmelden',
 
     'toggle_form'       => 'Erfassungsformular anzeigen/verstecken',

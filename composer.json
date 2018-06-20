@@ -12,7 +12,7 @@
     },
     "scripts": {
         "post-update-cmd": "app/composer-post-update",
-        "cs": "vendor/bin/phpcs -p -s --standard=PSR2 --tab-width=4 ./*.php app/",
-        "cbf": "vendor/bin/phpcbf -p --standard=PSR2 --tab-width=4 ./*.php app/"
+        "cs": "vendor/bin/phpcs -p -s --standard=PSR2 --tab-width=4 ./*.php app/ app/console language/",
+        "cbf": "vendor/bin/phpcbf -p --standard=PSR2 --tab-width=4 ./*.php app/ app/console language/"
     }
 }

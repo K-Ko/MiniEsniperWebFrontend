@@ -18,12 +18,19 @@ return [
     'esniper' => exec('which esniper'),
 
     /**
+     * If defined, only these users are allowed to use the application
+     * (case insensitive)
+     */
+    'users' => [],
+    # 'users' => [ 'user1', 'user2' ],
+
+    /**
      * Create data dir inside root dir. automatic
      *
      * If set, make sure the web server running user (mostly www-data)
      * can write to it!
      */
-    'dataDir' => '',
+    'dataDir' => '.d' . substr(md5(__DIR__), -11),
 
     /**
      * TLD to use for links to auctions

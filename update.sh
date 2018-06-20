@@ -1,5 +1,7 @@
 #!/bin/bash
 
+### WIP
+
 pwd=$(dirname $0)
 
 echo "::: Update repository"
@@ -24,7 +26,7 @@ if [ -x "$COMPOSER" ]; then
 else
     echo "FAILED"
     echo "::: Install composer.phar local ..."
-    wget https://raw.githubusercontent.com/composer/getcomposer.org/master/web/installer -O - -q | php -- --quiet
+    wget -q -O - https://raw.githubusercontent.com/composer/getcomposer.org/master/web/installer | php -- --quiet
     COMPOSER=$pwd/composer.phar
 fi
 

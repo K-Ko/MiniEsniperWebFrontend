@@ -1,7 +1,7 @@
 {
     "name": "Minimal esniper frontend",
     "short_name": "MEF",
-    "lang": "de-DE",
+    "lang": "en-EN",
     "start_url": "/",
     "display": "standalone",
     "theme_color": "#0F6DF6",

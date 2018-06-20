@@ -24,29 +24,33 @@
         <div class="col">
             <hr>
             <div class="form-group row">
-                <label class="col-sm-3 col-form-label" for="name">{|group_name|}</label>
-                <div class="col-sm-9">
+                <div class="col-sm-3">
+                    <label class="col-form-label" for="name">{|group_name|}</label>
+                    <small class="form-text text-muted d-sm-none mb-1">{|group_hint|}</small>
+                </div>
+                <div class="col">
                     <input type="text" id="name" class="form-control" name="name" required>
-                    <small class="form-text text-muted">{|group_hint|}</small>
+                    <small class="form-text text-muted d-none d-sm-block">{|group_hint|}</small>
                 </div>
             </div>
 
             <div class="form-group row">
                 <div class="col-sm-3">
                     <label class="col-form-label" for="data">{|auctions|}</label>
-                    <small class="form-text text-muted">
+                    <small class="form-text text-muted d-sm-none mb-1">{|auction_hint|}</small>
+                    <small class="form-text text-muted mb-1">
                         <a id="example" href="#">{|example|}</a>
                     </small>
                 </div>
-                <div class="col-sm-9">
+                <div class="col">
                     <textarea id="data" class="form-control" style="height:5rem" name="data" required></textarea>
-                    <small class="form-text text-muted">{|auction_hint|}</small>
+                    <small class="form-text text-muted d-none d-sm-block">{|auction_hint|}</small>
                 </div>
             </div>
 
             <div class="row">
                 <div class="col-sm-3"></div>
-                <div class="col-sm-9">
+                <div class="col">
                     <div class="row">
                         <div class="col">
                             <button class="btn btn-primary btn-block" name="action" value="start">{|start|}</button>
@@ -109,7 +113,7 @@
 <!-- Sniping groups end -->
 
 {{if (count($bugs)):}}
-<div class="row">
+<div class="row mt-4">
     <div class="col">
         <div class="h2">esniper bug reports</div>
 
@@ -118,7 +122,7 @@
             {{foreach ($bugs as $bug):}}
             <div class="form-check">
                 <input type="checkbox" class="form-check-input" name="bugs[]" value="{{$bug}}"> &nbsp;
-                <a class="form-check-label" href="{{$bug}}" rel="tooltip" title="Show esniper bug report" target="_blank">
+                <a class="form-check-label" href="?api=bug&amp;bug={{$bug}}" rel="tooltip" title="Show esniper bug report" target="_blank">
                     <i class="fa fa-fw fa-external-link-alt mr-1"></i>
                     {{$bug}}
                 </a>

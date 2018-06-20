@@ -1,10 +1,9 @@
 config.local.php
 hooks.php
-
-esniper.*.html
+release.sh
 
 /.d*
-design/custom/
+design/custom/*
 design_cpl/*
 
 **/css/bootstrap*.css
@@ -16,4 +15,3 @@ composer.lock
 vendor/
 
 !.githold
-

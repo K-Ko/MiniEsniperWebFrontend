@@ -21,8 +21,7 @@ extract(filter_input_array(
         'name_old'  => FILTER_SANITIZE_STRING,
         'data'      => FILTER_SANITIZE_STRING,
         'bugs'      => [
-            'filter'    => FILTER_VALIDATE_INT,
-            'flags'     => FILTER_REQUIRE_ARRAY
+            'flags' => FILTER_REQUIRE_ARRAY
         ]
     ],
     true
@@ -47,11 +46,15 @@ switch ($action) {
 
         session_regenerate_id();
 
-        $_SESSION['user'] = $ebay_user;
-        $_SESSION['pass'] = $ebay_pass;
-        $_SESSION['lang'] = isset($config->languages[$language]) ? $language : 'en';
+        if (count($config->users) == 0 || array_search(strtolower($ebay_user), $config->users) !== false) {
+            $_SESSION['user'] = $ebay_user;
+            $_SESSION['pass'] = $ebay_pass;
+            $_SESSION['lang'] = isset($config->languages[$language]) ? $language : 'en';
 
-        $_SESSION['message'] = ['class' => 'success', 'text' => mef\I18N::_('welcome') . '!'];
+            $_SESSION['message'] = ['class' => 'success', 'text' => mef\I18N::_('welcome') . '!'];
+        } else {
+            $_SESSION['message'] = ['class' => 'danger', 'text' => mef\I18N::_('invalid_user') . '!'];
+        }
 
         session_write_close();
         die(header('Location: /'));
@@ -77,7 +80,6 @@ switch ($action) {
 
         session_regenerate_id();
         session_write_close();
-
         die(header('Location: /'));
 
     // ---------------
@@ -114,9 +116,7 @@ switch ($action) {
 
     // ---------------
     case 'stop':
-        $snipe = $snipes->get($name);
-
-        if ($snipe) {
+        if ($snipe = $snipes->get($name)) {
             $snipe->stop();
             unset($snipe);
         }
@@ -125,9 +125,7 @@ switch ($action) {
 
     // ---------------
     case 'delete':
-        $snipe = $snipes->get($name);
-
-        if ($snipe) {
+        if ($snipe = $snipes->get($name)) {
             $snipe->delete();
             $snipes->remove($snipe);
             unset($snipe);
@@ -137,9 +135,6 @@ switch ($action) {
 
     // ---------------
     case 'bug':
-        foreach ((array) $bugs as $file) {
-            @unlink($file);
-        }
-
-        break;
+        array_map(function ($file) { @unlink(mef\User::$dir.'/'.$file); }, $bugs);
+        die(header('Location: /'));
 }
