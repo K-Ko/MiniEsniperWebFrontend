@@ -1,6 +1,7 @@
 # Available hooks
 
 Some hooks have a **parameter by reference**.
+
 Please refer to source code for context.
 
 ## index.php
