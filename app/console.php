@@ -12,8 +12,8 @@ function usage($rc = 0)
     global $argv;
 
     echo PHP_EOL;
-    echo 'Minimal esniper web frontend v', trim(file_get_contents('.version')), PHP_EOL, PHP_EOL;
-    echo "Usage: $argv[0] <command> [command options]", PHP_EOL, PHP_EOL;
+    echo 'Minimal esniper web frontend console v', trim(file_get_contents('.version')), PHP_EOL, PHP_EOL;
+    echo "Usage: $argv[0] <command> [options]", PHP_EOL, PHP_EOL;
     echo "       $argv[0] start <ebay user name> <password>          Start missing esniper processes", PHP_EOL;
     echo "       $argv[0] start <ebay user name> <password> <group>  Start esniper for group", PHP_EOL;
     echo "       $argv[0] restart <ebay user name> <password>        Restart all esniper processes", PHP_EOL;

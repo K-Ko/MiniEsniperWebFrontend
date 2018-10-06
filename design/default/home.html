@@ -1,12 +1,14 @@
 <div class="row header">
     <div class="col-3 col-sm-2">
-        <a id="toggle-form" href="#" class="btn btn-light fa fa-plus-circle fa-2x" rel="tooltip" title="{|toggle_form|}"></a>
+        <a id="toggle-form" href="#" class="btn btn-light fa fa-plus-circle fa-2x" rel="tooltip"
+           title="{|toggle_form|}"></a>
     </div>
     <div class="col text-center user">
         <span class="d-sm-none">{{echo mef\User::$name}}</span>
         <span class="d-none d-sm-inline h2">{{echo mef\User::$name}}</span>
         <form method="post">
-            <button type="submit" class="btn btn-light" rel="tooltip" title="{|logout|}" name="action" value="logout">
+            <button type="submit" class="btn btn-light" rel="tooltip" title="{|logout|}" name="action"
+                    value="logout">
                 <i class="fa fa-sign-out-alt"></i>
             </button>
         </form>
@@ -18,7 +20,7 @@
 
 <!-- Add auctions form start, show if no sniping group is defined yet -->
 <form method="post" accept-charset="utf-8">
-    <input type="hidden" name="name_old" value="{{if (isset($snipe)) echo $snipe->name}}">
+    <input id="name_old" type="hidden" name="name_old" value="{{if (isset($snipe)) echo $snipe->name}}">
 
     <div id="add-form" class="row {{if (count($snipes) && !isset($snipe)) echo 'd-none'}}">
         <div class="col">
@@ -43,7 +45,8 @@
                     </small>
                 </div>
                 <div class="col">
-                    <textarea id="data" class="form-control" style="height:5rem" name="data" required></textarea>
+                    <textarea id="data" class="form-control" style="height:5rem" name="data"
+                              required></textarea>
                     <small class="form-text text-muted d-none d-sm-block">{|auction_hint|}</small>
                 </div>
             </div>
@@ -72,30 +75,33 @@
     {{foreach ($snipes as $snipe): $token = $snipe->getNameHash()}}
     <div class="row py-2 table-bordered table-{{echo $snipe->pid ? 'success' : 'secondary'}}">
         <div class="col">
-            <strong class="pointer" rel="tooltip" title="{|show_log|}" data-toggle="log" data-token="{{$token}}" style="font-size:1.2rem">{{$snipe->name}}</strong>
+            <strong class="pointer" rel="tooltip" title="{|show_log|}" data-toggle="log" data-token="{{$token}}"
+                    style="font-size:1.2rem">{{$snipe->name}}</strong>
             {{if ($snipe->won):}}
             <div class="badge badge-pill badge-success text-monospace ml-3" rel="tooltip" title="{|won|}">
                 <i class="fa fa-fw fa-shopping-bag pr-2"></i> {{$snipe->won}}
             </div>
             {{endif}}
         </div>
-        <div class="col-4 col-sm-3 text-right">
+        <div class="col-auto text-right pr-2">
             <!-- Action buttons -->
             <form method="post">
                 <input type="hidden" name="name" value="{{$snipe->name}}">
 
-                <a href="#" data-api="edit" data-token="{{$token}}" class="btn btn-sm btn-primary" rel="tooltip" title="{|edit_group|}" value="edit">
+                <a href="#" data-api="edit" data-token="{{$token}}" class="btn btn-sm btn-primary mr-2"
+                   rel="tooltip" title="{|edit_group|}" value="edit">
                     <i class="far fa-fw fa-edit"></i>
                 </a>
-
                 <!-- esniper process IS running -->
-                <button class="btn btn-sm btn-danger btn-stop {{if (!$snipe->pid):}}d-none{{endif}}" name="action" data-api="stop" data-token="{{$token}}"
-                    rel="tooltip" title="{|stop_snipe|}" value="stop">
+                <button class="btn btn-sm btn-danger btn-stop {{if (!$snipe->pid):}}d-none{{endif}}"
+                        name="action" data-api="stop" data-token="{{$token}}" rel="tooltip" title="{|stop_snipe|}"
+                        value="stop">
                     <i class="fas fa-fw fa-stop"></i>
                 </button>
                 <!-- esniper process IS NOT running -->
-                <button class="btn btn-sm btn-warning btn-delete {{if ($snipe->pid):}}d-none{{endif}}" name="action" data-api="delete" data-token="{{$token}}"
-                    rel="tooltip" title="{|remove_group|}" value="delete">
+                <button class="btn btn-sm btn-warning btn-delete {{if ($snipe->pid):}}d-none{{endif}}"
+                        name="action" data-api="delete" data-token="{{$token}}" rel="tooltip" title="{|remove_group|}"
+                        value="delete">
                     <i class="fas fa-fw fa-trash"></i>
                 </button>
 
@@ -105,7 +111,8 @@
     <div id="log-{{$token}}" class="row log d-none">
         <div class="col p-0">
             <!-- esniper prtocol file -->
-            <div class="pre p-2 mb-0" tabindex="-1">{{if ($snipe->log):}}{{$snipe->log}}{{else:}}No auction log{{endif}}</div>
+            <div class="pre p-2 mb-0" tabindex="-1">{{if ($snipe->log):}}{{$snipe->log}}{{else:}}No
+                auction log{{endif}}</div>
         </div>
     </div>
     {{endforeach}}
@@ -121,8 +128,10 @@
 
             {{foreach ($bugs as $bug):}}
             <div class="form-check">
-                <input type="checkbox" class="form-check-input" name="bugs[]" value="{{$bug}}"> &nbsp;
-                <a class="form-check-label" href="?api=bug&amp;bug={{$bug}}" rel="tooltip" title="Show esniper bug report" target="_blank">
+                <input type="checkbox" class="form-check-input" name="bugs[]" value="{{$bug}}">
+                &nbsp;
+                <a class="form-check-label" href="?api=bug&amp;bug={{$bug}}" rel="tooltip" title="Show esniper bug report"
+                   target="_blank">
                     <i class="fa fa-fw fa-external-link-alt mr-1"></i>
                     {{$bug}}
                 </a>
@@ -146,7 +155,8 @@
     </div>
     <div class="row">
         <div class="col">
-            <img src="favicon.ico" class="mr-1" style="height:1rem;vertical-align:text-top;"> Minimal esniper web frontend
+            <img src="favicon.ico" class="mr-1" style="height:1rem;vertical-align:text-top;">
+            Minimal esniper web frontend
             <br>
             <small>
                 <strong class="text-monospace">v{{$config->version}}</strong>, check on
@@ -160,6 +170,34 @@
             <a href="http://esniper.sourceforge.net/" target="_blank">
                 <i class="fa fa-external-link-alt"></i> {{$config->esniper_version}}
             </a>
+            <br>
+            <a href="javascript:(
+            function() {
+                var w = window, d = document,
+                    s = d.getElementById('descItemNumber').innerText || w.getSelection().toString(),
+                    f = d.getElementById('fshippingCost').getElementsByTagName('span')[0].innerHTML;
+                if (s) {
+                    var e = encodeURIComponent,
+                        p = w.open('http://{{$server_name}}?api=bookmark&token={{$user_name}}' +
+                                   '&name=' + e(d.title.replace(/\s*\|.*/, '')) +
+                                   '&item=' + e(s) +
+                                   '&ship=' + e(f),
+                                   'es_popup',
+                                   'left=' + ((w.screenX || w.screenLeft) + 25) + ',' +
+                                   'top=' + ((w.screenY || w.screenTop) + 25) + ',' +
+                                   'height=120px,' +
+                                   'width=480px,' +
+                                   'menubar=0,' +
+                                   'resizable=0,' +
+                                   'status=0,' +
+                                   'location=0,' +
+                                   'alwaysRaised=1' );
+                    w.setTimeout(function() { p.focus(); }, 300);
+                } else {
+                    w.alert('Please select item Id before!');
+                }
+            })();"
+               class="small" rel="tooltip" title="{|bookmarklet_hint|}">{|bookmarklet|}</a>
         </div>
     </div>
 </footer>

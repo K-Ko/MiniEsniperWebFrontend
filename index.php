@@ -63,6 +63,7 @@ if (isset($_SESSION['user'], $_SESSION['pass'])) {
     $page = 'home';
 
     User::init($_SESSION['user'], $_SESSION['pass']);
+    $user_name=User::$name;
 
     // Load all auction groups
     $snipes = new Snipes();
@@ -81,6 +82,8 @@ include 'api.php';
 
 // Check for form submits
 include 'post.php';
+
+$server_name = $_SERVER['SERVER_NAME'];
 
 foreach (['index', $page] as $tpl) {
     $cpl = 'design_cpl/' . $config->design . '.' . $tpl . '.html';

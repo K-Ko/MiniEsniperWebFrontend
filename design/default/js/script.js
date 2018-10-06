@@ -81,6 +81,7 @@ $(function() {
 
         var el_form = $('#add-form'),
             el_name = $('#name'),
+            el_name_old = $('#name_old'),
             el_data = $('#data');
 
         // Hide all logs
@@ -93,12 +94,11 @@ $(function() {
             .addClass('fa-minus-circle');
 
         // Fetch auction group data
-        $.getJSON('/', { api: 'edit', token: $(this).data('token') }, function(
-            data
-        ) {
+        $.getJSON('/', { api: 'edit', token: $(this).data('token') }, function(data) {
             el_name.prop('value', data.name);
+            el_name_old.prop('value', data.name);
             el_data
-                .text(data.data)
+                .html(data.data)
                 .trigger('input')
                 .focus();
         }).always(function() {
@@ -149,8 +149,7 @@ $(function() {
         $.get('/app/example.txt', function(data) {
             var el = $('#data'),
                 text = el.text() + '\n';
-            el
-                .text((text + data).trim())
+            el.text((text + data).trim())
                 .trigger('input')
                 .focus();
         });

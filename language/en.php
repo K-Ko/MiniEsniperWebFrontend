@@ -43,4 +43,7 @@ return [
     'stop_snipe'        => 'Stop active esniper',
     'remove_group'      => 'Remove sniping group &amp; log',
 
+    'bookmarklet'       => 'Add to esniper',
+    'bookmarklet_hint'  => 'Drag this link to your bookmarks',
+
 ];

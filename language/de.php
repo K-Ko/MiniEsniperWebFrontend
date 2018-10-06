@@ -43,4 +43,7 @@ return [
     'stop_snipe'        => 'Stoppe aktiven esniper',
     'remove_group'      => 'Auktionsgruppe und Logdatei löschen',
 
+    'bookmarklet'       => 'Zu esniper hinzufügen',
+    'bookmarklet_hint'  => 'Ziehe diesen Link auf Deine Lesezeichen',
+
 ];
