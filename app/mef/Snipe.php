@@ -28,6 +28,13 @@ class Snipe
     public $data;
 
     /**
+     * End time(s)
+     *
+     * @var string
+     */
+    public $end;
+
+    /**
      * esniper log
      *
      * @var string
@@ -324,6 +331,7 @@ class Snipe
     {
         $this->name  = '';
         $this->data  = '';
+        $this->end   = '';
         $this->log   = '';
         $this->won   = false;
         $this->pid   = 0;
@@ -351,6 +359,26 @@ class Snipe
                 if ($your >= $last) {
                     $this->won = sprintf('%.2f (%.2f)', $last, $your);
                     $log .= PHP_EOL . sprintf('You paid %d%% of your maximum bid.', $last/$your*100);
+                }
+            }
+
+            if (preg_match_all('~End time: *(.*)$~m', $log, $args)) {
+                // Get last end time from log
+                $ts = strptime(array_pop($args[1]), '%d/%m/%Y %H:%M:%S');
+
+                // Make timestamp for reformating
+                $ts = mktime(
+                    $ts['tm_hour'],
+                    $ts['tm_min'],
+                    $ts['tm_sec'],
+                    $ts['tm_mon'] + 1,
+                    $ts['tm_mday'],
+                    $ts['tm_year'] + 1900
+                );
+
+                // Not ended auction?
+                if ($ts > time()) {
+                    $this->end = date(I18N::_('timestamp_format'), $ts);
                 }
             }
 

@@ -102,7 +102,7 @@ foreach (['index', $page] as $tpl) {
             }
         }
         // Coding - {{if (true):}}
-        if (preg_match_all('~\{\{(.+?)\}\}~', $html, $matches, PREG_SET_ORDER)) {
+        if (preg_match_all('~\{\{(.+?)\}\}~s', $html, $matches, PREG_SET_ORDER)) {
             foreach ($matches as $match) {
                 $html = str_replace($match[0], '<?php '.$match[1].' ?'.'>', $html);
             }

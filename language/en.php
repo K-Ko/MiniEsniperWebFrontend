@@ -8,6 +8,8 @@
  */
 return [
 
+    'timestamp_format'  => 'Y-m-d H:i:s',
+
     'ebay_user'         => 'Email or username',
     'ebay_pass'         => 'Password',
     'language'          => 'Language',
