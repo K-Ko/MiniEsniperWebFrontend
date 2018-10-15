@@ -76,6 +76,8 @@ if (isset($snipes) && $snipe = $snipes->find($GET['token'])) {
             mef\User::init($GET['token'], null);
 
             $name = urldecode($GET['name']);
+            // Ebay uses &#34; as quotes in auction names
+            $name = str_replace('&#34;', '"', $name);
 
             // Trim auction title title to max. 40 chars, don't split words
             // $name = substr($name, 0, 40);

@@ -30,13 +30,14 @@ Hook::apply('init');
 // Load default config and custom config if exists
 $config = Config::getInstance()->load('config.default.php')->load('config.local.php');
 
+// Must be set via config.local.php
 if ($config->debug) {
     ini_set('display_errors', 1);
     error_reporting(-1);
 }
 
 if ($config->esniper == '') {
-    die('Can not find esniper binary, please help and define in <pre>config.php</pre>');
+    die('Can not find esniper binary, please help and define in <pre>config.local.php</pre>');
 }
 
 $config->version = trim(file_get_contents('.version'));
@@ -117,8 +118,8 @@ foreach (['index', $page] as $tpl) {
         Hook::apply('template.compiled', $html);
 
         if (!$config->debug) {
-            $html = preg_replace('~/\*.+?\*/~s', '', $html);
             $html = preg_replace('~\s*$\s*~m', '', $html);
+            $html = preg_replace('~/\*.+?\*/~s', ' ', $html);
             $html = str_replace(['<?php', '?'.'>'], ['<?php ', ' ?'.'>'], $html);
 
             Hook::apply('template.compressed', $html);

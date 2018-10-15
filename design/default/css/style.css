@@ -17,7 +17,8 @@ form {
     display: inline;
 }
 
-a, .btn-link {
+a,
+.btn-link {
     text-decoration: none !important;
     color: maroon;
 }
@@ -41,8 +42,8 @@ a, .btn-link {
 }
 
 textarea,
-input[type=text] {
-    padding: .25em .5em;
+input[type='text'] {
+    padding: 0.25em 0.5em;
 }
 
 .pre {

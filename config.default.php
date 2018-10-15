@@ -67,10 +67,5 @@ return [
     /**
      * Inital language
      */
-    'language' => 'en',
-
-    /**
-     * Only for development
-     */
-    'debug' => false,
+    'language' => 'en'
 ];

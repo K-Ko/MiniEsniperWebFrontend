@@ -137,7 +137,7 @@ class Snipe
                 sprintf(
                     'name = "%2$s"%1$s%1$sdata = "%3$s%1$s"%1$s',
                     PHP_EOL,
-                    $this->name,
+                    str_replace('"', '\\"', $this->name),
                     trim($this->data)
                 )
             );
@@ -362,6 +362,7 @@ class Snipe
                 }
             }
 
+            // Get auction end time
             if (preg_match_all('~End time: *(.*)$~m', $log, $args)) {
                 // Get last end time from log
                 $ts = strptime(array_pop($args[1]), '%d/%m/%Y %H:%M:%S');
