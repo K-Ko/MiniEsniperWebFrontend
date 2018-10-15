@@ -62,7 +62,7 @@ class Config
      *
      * @param string $name
      * @param mixed $value
-     * @return Instance
+     * @return Instance $this for fluid interface
      */
     public function set($name, $value)
     {

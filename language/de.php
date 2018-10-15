@@ -8,6 +8,8 @@
  */
 return [
 
+    'timestamp_format'  => 'd.m.Y H:i:s',
+
     'ebay_user'         => 'E-Mail-Adresse oder Nutzername',
     'ebay_pass'         => 'Passwort',
     'language'          => 'Sprache',
@@ -42,5 +44,8 @@ return [
     'edit_group'        => 'Auktionsgruppe ändern',
     'stop_snipe'        => 'Stoppe aktiven esniper',
     'remove_group'      => 'Auktionsgruppe und Logdatei löschen',
+
+    'bookmarklet'       => 'Zu esniper hinzufügen',
+    'bookmarklet_hint'  => 'Ziehe diesen Link auf Deine Lesezeichen',
 
 ];

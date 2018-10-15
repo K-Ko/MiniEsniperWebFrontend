@@ -28,10 +28,13 @@ jQuery.fn.extend({
  * On load
  */
 $(function() {
-    $('[rel="tooltip"]').tooltip();
+    $('.container').removeClass('loading');
+
     $('#data').autoHeight();
 
-    $('#toggle-form').on('click', function(e) {
+    $('[rel="tooltip"]').tooltip();
+
+    $('#toggle-form').click(function(e) {
         e.preventDefault();
 
         var edit = $('#add-form');
@@ -52,7 +55,7 @@ $(function() {
             .toggleClass('fa-minus-circle');
     });
 
-    $('[data-toggle=log]').on('click', function(e) {
+    $('[data-toggle=log]').click(function(e) {
         e.preventDefault();
 
         var el = $('#log-' + $(this).data('token'));
@@ -76,12 +79,10 @@ $(function() {
         }
     });
 
-    $('[data-api=edit]').on('click', function(e) {
+    $('[data-api=edit]').click(function(e) {
         e.preventDefault();
 
-        var el_form = $('#add-form'),
-            el_name = $('#name'),
-            el_data = $('#data');
+        var el_form = $('#add-form');
 
         // Hide all logs
         $('.log').addClass('d-none');
@@ -96,9 +97,9 @@ $(function() {
         $.getJSON('/', { api: 'edit', token: $(this).data('token') }, function(
             data
         ) {
-            el_name.prop('value', data.name);
-            el_data
-                .text(data.data)
+            $('#name, #name_old').prop('value', data.name);
+            $('#data')
+                .html(data.data)
                 .trigger('input')
                 .focus();
         }).always(function() {
@@ -106,7 +107,7 @@ $(function() {
         });
     });
 
-    $('[data-api=stop]').on('click', function(e) {
+    $('[data-api=stop]').click(function(e) {
         e.preventDefault();
 
         var $this = $(this),
@@ -129,7 +130,7 @@ $(function() {
         });
     });
 
-    $('[data-api=delete]').on('click', function(e) {
+    $('[data-api=delete]').click(function(e) {
         e.preventDefault();
 
         var $this = $(this),
@@ -139,18 +140,21 @@ $(function() {
             if (data) {
                 $this.closest('.row').remove();
                 $('#log-' + token).remove();
+                $('#add-form').addClass('d-none');
+                $('#toggle-form')
+                    .removeClass('fa-minus-circle')
+                    .addClass('fa-plus-circle');
             }
         });
     });
 
-    $('#example').on('click', function(e) {
+    $('#example').click(function(e) {
         e.preventDefault();
 
         $.get('/app/example.txt', function(data) {
             var el = $('#data'),
                 text = el.text() + '\n';
-            el
-                .text((text + data).trim())
+            el.text((text + data).trim())
                 .trigger('input')
                 .focus();
         });
@@ -170,4 +174,12 @@ $(function() {
                 $(this).remove();
             });
     }, 5000);
+
+    // Reload page on activate
+    pageVisibilityApi.Init({
+        onShow: function() {
+            location.href = '/';
+        },
+        delay: 1
+    });
 });

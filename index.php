@@ -30,13 +30,14 @@ Hook::apply('init');
 // Load default config and custom config if exists
 $config = Config::getInstance()->load('config.default.php')->load('config.local.php');
 
+// Must be set via config.local.php
 if ($config->debug) {
     ini_set('display_errors', 1);
     error_reporting(-1);
 }
 
 if ($config->esniper == '') {
-    die('Can not find esniper binary, please help and define in <pre>config.php</pre>');
+    die('Can not find esniper binary, please help and define in <pre>config.local.php</pre>');
 }
 
 $config->version = trim(file_get_contents('.version'));
@@ -63,6 +64,7 @@ if (isset($_SESSION['user'], $_SESSION['pass'])) {
     $page = 'home';
 
     User::init($_SESSION['user'], $_SESSION['pass']);
+    $user_name=User::$name;
 
     // Load all auction groups
     $snipes = new Snipes();
@@ -82,6 +84,8 @@ include 'api.php';
 // Check for form submits
 include 'post.php';
 
+$server_name = $_SERVER['SERVER_NAME'];
+
 foreach (['index', $page] as $tpl) {
     $cpl = 'design_cpl/' . $config->design . '.' . $tpl . '.html';
     $tpl = 'design/' . $config->design . '/' . $tpl . '.html';
@@ -99,7 +103,7 @@ foreach (['index', $page] as $tpl) {
             }
         }
         // Coding - {{if (true):}}
-        if (preg_match_all('~\{\{(.+?)\}\}~', $html, $matches, PREG_SET_ORDER)) {
+        if (preg_match_all('~\{\{(.+?)\}\}~s', $html, $matches, PREG_SET_ORDER)) {
             foreach ($matches as $match) {
                 $html = str_replace($match[0], '<?php '.$match[1].' ?'.'>', $html);
             }
@@ -114,8 +118,8 @@ foreach (['index', $page] as $tpl) {
         Hook::apply('template.compiled', $html);
 
         if (!$config->debug) {
-            $html = preg_replace('~/\*.+?\*/~s', '', $html);
             $html = preg_replace('~\s*$\s*~m', '', $html);
+            $html = preg_replace('~/\*.+?\*/~s', ' ', $html);
             $html = str_replace(['<?php', '?'.'>'], ['<?php ', ' ?'.'>'], $html);
 
             Hook::apply('template.compressed', $html);

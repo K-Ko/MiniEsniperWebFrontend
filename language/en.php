@@ -8,6 +8,8 @@
  */
 return [
 
+    'timestamp_format'  => 'Y-m-d H:i:s',
+
     'ebay_user'         => 'Email or username',
     'ebay_pass'         => 'Password',
     'language'          => 'Language',
@@ -42,5 +44,8 @@ return [
     'edit_group'        => 'Edit sniping group',
     'stop_snipe'        => 'Stop active esniper',
     'remove_group'      => 'Remove sniping group &amp; log',
+
+    'bookmarklet'       => 'Add to esniper',
+    'bookmarklet_hint'  => 'Drag this link to your bookmarks',
 
 ];

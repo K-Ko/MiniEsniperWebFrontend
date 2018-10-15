@@ -21,7 +21,7 @@ $GET = filter_input_array(
 
 $result = '';
 
-if ($snipe = $snipes->find($GET['token'])) {
+if (isset($snipes) && $snipe = $snipes->find($GET['token'])) {
     switch ($GET['api']) {
         // ---------------
         case 'edit':
@@ -54,7 +54,8 @@ if ($snipe = $snipes->find($GET['token'])) {
         [
             'bug'  => FILTER_SANITIZE_STRING,
             'name' => FILTER_SANITIZE_STRING,
-            'item' => FILTER_SANITIZE_STRING
+            'item' => FILTER_SANITIZE_STRING,
+            'ship' => FILTER_SANITIZE_STRING
         ],
         true
     ));
@@ -74,15 +75,21 @@ if ($snipe = $snipes->find($GET['token'])) {
             // Need user for snipe instance to have a data path
             mef\User::init($GET['token'], null);
 
+            $name = urldecode($GET['name']);
+            // Ebay uses &#34; as quotes in auction names
+            $name = str_replace('&#34;', '"', $name);
+
             // Trim auction title title to max. 40 chars, don't split words
-            $name = substr($GET['name'], 0, 40);
-            while (strlen($name) && substr($name, -1) != ' ') {
-                $name = substr($name, 0, -1);
-            }
+            // $name = substr($name, 0, 40);
+            // while (strlen($name) && substr($name, -1) != ' ') {
+            //     $name = substr($name, 0, -1);
+            // }
 
             $snipe = new mef\Snipe(
                 trim($name),
-                '# Define your price #' . PHP_EOL . $GET['item']
+                '# Shipping: ' . urldecode($GET['ship']) . PHP_EOL .
+                '# Adjust your price!' . PHP_EOL .
+                $GET['item'] . ' 1.00'
             );
 
             $result = $snipe->save()

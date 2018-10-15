@@ -1,5 +1,7 @@
 # A minimal esniper web frontend
 
+![](https://img.shields.io/github/release/K-Ko/MiniEsniperWebFrontend.svg)
+
 This repo will cover the handling of [esniper](http://esniper.sourceforge.net/),  a lightweight eBay sniping tool.
 
 It works directly with the files created by esniper.
