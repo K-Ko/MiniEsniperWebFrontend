@@ -1,6 +1,13 @@
 <?php
 /**
  *
+ */
+use App\I18n;
+use App\Snipe;
+use App\User;
+
+/**
+ *
  *
  * @author     Knut Kohl <github@knutkohl.de>
  * @copyright  (c) 2016 Knut Kohl
@@ -27,20 +34,21 @@ if (isset($snipes) && $snipe = $snipes->find($GET['token'])) {
         case 'edit':
             $snipe->stop();
             $result = ['name' => $snipe->name, 'data' => $snipe->data ];
-
             break;
 
-            // ---------------
+        // ---------------
         case 'stop':
             $result = $snipe->stop();
-            #$result = $snipe->log;
-
             break;
 
         // ---------------
         case 'delete':
             $result = $snipe->delete();
+            break;
 
+        // ---------------
+        case 'log':
+            $result = $snipe->log;
             break;
     } // switch
 
@@ -52,10 +60,12 @@ if (isset($snipes) && $snipe = $snipes->find($GET['token'])) {
     $GET = array_merge($GET, filter_input_array(
         INPUT_GET,
         [
-            'bug'  => FILTER_SANITIZE_STRING,
-            'name' => FILTER_SANITIZE_STRING,
-            'item' => FILTER_SANITIZE_STRING,
-            'ship' => FILTER_SANITIZE_STRING
+            'bug'   => FILTER_SANITIZE_STRING,
+            'name'  => FILTER_SANITIZE_STRING,
+            'item'  => FILTER_SANITIZE_STRING,
+            'price' => FILTER_SANITIZE_STRING,
+            'ship'  => FILTER_SANITIZE_STRING,
+            'bid'   => FILTER_SANITIZE_STRING
         ],
         true
     ));
@@ -64,7 +74,7 @@ if (isset($snipes) && $snipe = $snipes->find($GET['token'])) {
         // ---------------
         case 'bug':
             // Bug file contents
-            $bug = mef\User::$dir.'/'.$GET['bug'];
+            $bug = User::$dir.'/'.$GET['bug'];
             if (is_file($bug)) {
                 $result = file_get_contents($bug);
             }
@@ -73,31 +83,27 @@ if (isset($snipes) && $snipe = $snipes->find($GET['token'])) {
         // ---------------
         case 'bookmark':
             // Need user for snipe instance to have a data path
-            mef\User::init($GET['token'], null);
+            User::init($GET['token'], null);
 
-            $name = urldecode($GET['name']);
             // Ebay uses &#34; as quotes in auction names
-            $name = str_replace('&#34;', '"', $name);
+            $name = str_replace('&#34;', '"', urldecode($GET['name']));
 
-            // Trim auction title title to max. 40 chars, don't split words
-            // $name = substr($name, 0, 40);
-            // while (strlen($name) && substr($name, -1) != ' ') {
-            //     $name = substr($name, 0, -1);
-            // }
-
-            $snipe = new mef\Snipe(
+            $snipe = new Snipe(
                 trim($name),
-                '# Shipping: ' . urldecode($GET['ship']) . PHP_EOL .
-                '# Adjust your price!' . PHP_EOL .
-                $GET['item'] . ' 1.00'
+                '# ' . I18N::_('actual_bid') . ': ' . urldecode($GET['price']) . PHP_EOL .
+                '# ' . I18N::_('shipping_costs') . ': ' . urldecode($GET['ship']) . PHP_EOL .
+                $GET['item'] . ' ' . $GET['bid']
             );
 
-            $result = $snipe->save()
-                    ? 'Added auction group<br><br><strong>' . $name . '</strong>'
-                    : 'Failed, something went wrong :-(';
+            if ($snipe->save()) {
+                $msg = I18N::_('group_added', $name);
+                $_SESSION['new'][$snipe->getHash()] = true;
+            } else {
+                $msg = I18N::_('group_add_failed');
+            }
 
             $result = '<html><body style="padding:1rem;font-family:sans-serif">'
-                    . $result
+                    . $msg
                     . '</body></html>';
 
             break;

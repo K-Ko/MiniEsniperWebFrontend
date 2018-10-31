@@ -7,11 +7,15 @@
  * @licence    MIT License - http://opensource.org/licenses/MIT
  */
  // phpcs:disable Generic.Files.LineLength.TooLong
+ /**
+  * Hook is located in the App namespace
+  */
+namespace App;
 
 /**
  * Custom styles for esniper logs
  */
-mef\Hook::register(
+Hook::register(
     'head.style',
     function () {
         return '.currently { font-weight: bold; color: blue;  }
@@ -23,7 +27,7 @@ mef\Hook::register(
 /**
  * Highligt some log lines for better overview
  */
-mef\Hook::register(
+Hook::register(
     'snipe.loaded',
     function ($snipe) {
         $expr = [
@@ -35,7 +39,7 @@ mef\Hook::register(
             // Highligt log lines for better readability
             // Auction title
             '~^Auction (\d+): *(.*)$~m'     =>
-                '<a href="https://www.ebay.'.mef\Config::getInstance()->ebay.'/itm/$1" class="h6 btn-link" target="_blank"><strong>$2</strong></a>',
+                '<a href="https://www.ebay.'.Config::getInstance()->ebay.'/itm/$1" class="h6 btn-link" target="_blank"><strong>$2</strong></a>',
             // Current price
             '~^Currently:.*$~m'             => '<span class="currently">$0</span>',
             // High bidder NOT yourself
@@ -58,10 +62,10 @@ mef\Hook::register(
 /**
  * Translate logs to DE
  */
-mef\Hook::register(
+Hook::register(
     'snipe.loaded',
     function ($snipe) {
-        if (mef\Config::getInstance()->language != 'de') {
+        if (Config::getInstance()->language != 'de') {
             return;
         }
 
@@ -107,7 +111,7 @@ mef\Hook::register(
 /**
  *
  */
-mef\Hook::register(
+Hook::register(
     'after.render',
     function () {
         // Some statistics

@@ -1,6 +1,13 @@
 <?php
 /**
  *
+ */
+use App\I18N;
+use App\Snipe;
+use App\User;
+
+/**
+ *
  *
  * @author     Knut Kohl <github@knutkohl.de>
  * @copyright  (c) 2016 Knut Kohl
@@ -46,14 +53,26 @@ switch ($action) {
 
         session_regenerate_id();
 
+        if (!isset($config->languages[$language])) {
+            $language = 'en';
+        }
+
+        // Reload translations for messages
+        I18N::load(realpath('language/' . $language . '.php'));
+
         if (count($config->users) == 0 || array_search(strtolower($ebay_user), $config->users) !== false) {
             $_SESSION['user'] = $ebay_user;
             $_SESSION['pass'] = $ebay_pass;
-            $_SESSION['lang'] = isset($config->languages[$language]) ? $language : 'en';
+            $_SESSION['lang'] = $language;
 
-            $_SESSION['message'] = ['class' => 'success', 'text' => mef\I18N::_('welcome') . '!'];
+            $_SESSION['token'] = App\Encoder::encrypt(
+                $ebay_user . "\t" . $ebay_pass . "\t" . $_SESSION['lang'],
+                $config->secret
+            );
+
+            $_SESSION['message'] = ['class' => 'success', 'text' => I18N::_('welcome') . '!'];
         } else {
-            $_SESSION['message'] = ['class' => 'danger', 'text' => mef\I18N::_('invalid_user') . '!'];
+            $_SESSION['message'] = ['class' => 'danger', 'text' => I18N::_('invalid_user') . '!'];
         }
 
         session_write_close();
@@ -88,12 +107,19 @@ switch ($action) {
             break;
         }
 
+        $new = true;
+
         if ($snipe = $snipes->get($name_old)) {
             $snipe->delete();
+            $new = false;
         }
 
-        $snipe = new mef\Snipe($name, $data);
+        $snipe = new Snipe($name, $data);
         $snipe->save();
+
+        if ($new) {
+            $_SESSION['new'][$snipe->getHash()] = true;
+        }
 
         session_write_close();
         die(header('Location: /'));
@@ -108,7 +134,7 @@ switch ($action) {
             $snipe->delete();
         }
 
-        $snipe = new mef\Snipe($name, $data);
+        $snipe = new Snipe($name, $data);
         $snipe->start();
 
         session_write_close();
@@ -135,6 +161,8 @@ switch ($action) {
 
     // ---------------
     case 'bug':
-        array_map(function ($file) { @unlink(mef\User::$dir.'/'.$file); }, $bugs);
+        array_map(function ($file) {
+            @unlink(User::$dir.'/'.$file);
+        }, $bugs);
         die(header('Location: /'));
 }

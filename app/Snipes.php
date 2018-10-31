@@ -6,7 +6,7 @@
  * @copyright  (c) 2016 Knut Kohl
  * @licence    MIT License - http://opensource.org/licenses/MIT
  */
-namespace mef;
+namespace App;
 
 /**
  *
@@ -77,7 +77,7 @@ class Snipes implements Iterator, ArrayAccess, Countable
     public function find($token)
     {
         foreach ($this->container as &$snipe) {
-            if ($snipe->getNameHash() == $token) {
+            if ($snipe->getHash() == $token) {
                 return $snipe;
             }
         }
@@ -237,7 +237,18 @@ class Snipes implements Iterator, ArrayAccess, Countable
     protected function sort()
     {
         usort($this->container, function ($a, $b) {
-            return strcasecmp($a->name, $b->name);
+            $aIsNew = isset($_SESSION['new'][$a->getHash()]);
+            $bIsNew = isset($_SESSION['new'][$b->getHash()]);
+            // Both or none are new
+            if ($aIsNew && $bIsNew || !$aIsNew && !$bIsNew) {
+                return strcasecmp($a->name, $b->name);
+            } elseif ($aIsNew) {
+                // Only $a is new, then always less than $b
+                return -1;
+            } elseif ($bIsNew) {
+                // Only $b is new, then always greater than $a
+                return 1;
+            }
         });
     }
 }

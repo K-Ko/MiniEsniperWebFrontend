@@ -2,7 +2,7 @@
 /**
  *
  */
-namespace mef;
+namespace App;
 
 /**
  * Hold all data for a specific snipe
@@ -34,7 +34,7 @@ abstract class I18N
              ? vsprintf(self::$data[$key], $args)
              : '?? ' . $key . ' ??';
 
-        return preg_replace('~\s\s+~s', ' ', $trans);
+        return preg_replace('~\s+~s', ' ', $trans);
     }
 
     /**
