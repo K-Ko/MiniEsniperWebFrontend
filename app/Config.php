@@ -6,7 +6,7 @@
  * @copyright  (c) 2016 Knut Kohl
  * @licence    MIT License - http://opensource.org/licenses/MIT
  */
-namespace mef;
+namespace App;
 
 /**
  * Simple configuration class

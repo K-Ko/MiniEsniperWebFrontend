@@ -34,14 +34,14 @@
           crossorigin="anonymous">
     <link rel="stylesheet" href="/design/default/css/style.css">
 
-    <style>{{echo mef\Hook::apply('head.style')}}</style>
-    <script>{{ echo mef\Hook:: apply('head.script') }}</script>
+    <style>{{echo App\Hook::apply('head.style')}}</style>
+    <script>{{ echo App\Hook:: apply('head.script') }}</script>
 </head>
 
 <body>
 
     <div class="container loading mt-3">
-        {{echo mef\Hook::apply('before.content')}}
+        {{echo App\Hook::apply('before.content')}}
 
         {{if (isset($_SESSION['message'])):}}
         <div class="row mt-3">
@@ -60,14 +60,13 @@
 
         {{include 'design_cpl/' . $config->design . '.' . $page . '.html'}}
 
-        {{echo mef\Hook::apply('after.content')}}
+        {{echo App\Hook::apply('after.content')}}
     </div>
 
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
     <script src="/design/default/js/bootstrap.bundle.min.js"></script>
-    <script src="/design/default/js/pageVisible.js"></script>
-    <script src="/design/default/js/script.js"></script> {{echo
-    mef\Hook::apply('body.script')}}
+    <script src="/design/default/js/script.js"></script>
+    {{echo App\Hook::apply('body.script')}}
 
 </body>
 

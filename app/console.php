@@ -2,6 +2,13 @@
 <?php
 /**
  *
+ */
+use App\Config;
+use App\Snipes;
+use App\User;
+
+/**
+ *
  *
  * @author     Knut Kohl <github@knutkohl.de>
  * @copyright  (c) 2016 Knut Kohl
@@ -49,7 +56,7 @@ if ($argc < 2) {
 require '../vendor/autoload.php';
 
 // Load default config and custom config if exists
-$config = mef\Config::getInstance()->load('config.default.php')->load('config.local.php');
+$config = Config::getInstance()->load('config.default.php')->load('config.local.php');
 
 switch ($argv[1]) {
     // ------------------
@@ -58,16 +65,16 @@ switch ($argv[1]) {
             usage(2);
         }
 
-        mef\User::init($argv[2], $argv[3]);
+        User::init($argv[2], $argv[3]);
 
         // Load all auction groups
-        $snipes = new mef\Snipes();
+        $snipes = new Snipes();
 
-		if (isset($argv[4])) {
-			if ($snipe = $snipes->get($argv[4])) {
+        if (isset($argv[4])) {
+            if ($snipe = $snipes->get($argv[4])) {
                 startSnipe($snipe);
-			}
-		} else {
+            }
+        } else {
             e('::: Start snipes of', $argv[2]);
             foreach ($snipes as $snipe) {
                 e(str_repeat('-', 70));
@@ -89,10 +96,10 @@ switch ($argv[1]) {
 
         e('::: Restart snipes of', $argv[2]);
 
-        mef\User::init($argv[2], $argv[3]);
+        User::init($argv[2], $argv[3]);
 
         // Load all auction groups
-        $snipes = new mef\Snipes();
+        $snipes = new Snipes();
 
         foreach ($snipes as $snipe) {
             e(str_repeat('-', 70));
@@ -123,7 +130,6 @@ switch ($argv[1]) {
         $it->rewind();
 
         while ($it->valid()) {
-
             if (!$it->isDot() && preg_match('~\.log$~', $it->key())) {
                 if (filemtime($it->key()) < $ts) {
                     $log = $it->key();
@@ -140,13 +146,12 @@ switch ($argv[1]) {
 #                        unlink($pid);
                     }
                 }
-
             }
 
             $it->next();
         }
 
-		exec('find ' . $config->dataDir . ' -empty -delete');
+        exec('find ' . $config->dataDir . ' -empty -delete');
 
         break;
 

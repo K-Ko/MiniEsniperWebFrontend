@@ -21,6 +21,7 @@ return [
 
     'toggle_form'       => 'Erfassungsformular anzeigen/verstecken',
     'reload_page'       => 'Seite neu laden',
+    'reload_log'        => 'Auktions-Log neu laden',
 
     'group_name'        => 'Gruppenname',
     'group_hint'        => 'Auktions-Gruppen werden alphabetisch sortiert',
@@ -35,8 +36,11 @@ return [
 
     'start'             => 'Sichern &amp; Starten',
     'save'              => 'Sichern',
+    'started'           => '<strong>Erfogreich!</strong> esniper startete in %.1f Sek.',
+    'start_failed'      => '<strong>Fehler!</strong> Bitte pfüfe das Auktions-Log!',
 
-    'show_log'          => 'esniper Protokolldatei',
+    'no_log'            => 'Kein Auktions-Log',
+    'show_log'          => 'esniper Auktions-Log',
     'won'               => 'GEWONNEN!',
 
     'ebay_auction'      => 'ebay Auktion',
@@ -45,7 +49,16 @@ return [
     'stop_snipe'        => 'Stoppe aktiven esniper',
     'remove_group'      => 'Auktionsgruppe und Logdatei löschen',
 
-    'bookmarklet'       => 'Zu esniper hinzufügen',
+    'actual_bid'        => 'Aktuelles Gebot',
+    'your_bid'          => 'Dein Gebot?',
+    'shipping_costs'    => 'Versandkosten',
+
+    'group_added'       => 'Auktionsgruppe hinzugefügt.<br><br><strong>%s</strong>',
+    'group_add_failed'  => 'Fehlgeschlagen, etwas ging schief :-(',
+
+    'bookmarklet'       => 'Zu MEWF hinzufügen',
     'bookmarklet_hint'  => 'Ziehe diesen Link auf Deine Lesezeichen',
+
+    'token_login'       => 'MEWF Token-Login',
 
 ];

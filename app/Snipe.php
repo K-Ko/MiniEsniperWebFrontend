@@ -6,7 +6,7 @@
  * @copyright  (c) 2016 Knut Kohl
  * @licence    MIT License - http://opensource.org/licenses/MIT
  */
-namespace mef;
+namespace App;
 
 /**
  * Hold all data for a specific snipe
@@ -160,7 +160,7 @@ class Snipe
         $this->save();
 
         // Put ebay credentials and snipes data into temp. file,
-        $token    = $this->getNameHash();
+        $token    = $this->getHash();
         $dataFile = tempnam(sys_get_temp_dir(), 'mef.') . $token;
         $confFile = $dataFile . '.conf';
 
@@ -182,7 +182,7 @@ class Snipe
 
         // Put all together ...
         $cmd = sprintf(
-            'cd %s && nohup %s -b -c %s %s >>%s 2>&1 & echo -n $! >%s',
+            "cd %s && \\\nnohup %s -b -c %s %s \\\n>>%s 2>&1 & \\\necho -n $! >%s",
             User::$dir,
             $this->config->esniper,
             $confFile,
@@ -227,15 +227,12 @@ class Snipe
         if (!$this->pid || strpos($this->log, 'Error') !== false) {
             $_SESSION['message'] = [
                 'class' => 'danger',
-                'text'  => '<strong>Error!</strong> esniper failed, please check the log!'
+                'text'  => I18N::_('start_failed')
             ];
         } else {
             $_SESSION['message'] = [
                 'class' => 'success',
-                'text'  => sprintf(
-                    '<strong>Success!</strong> esniper started in %.1f sec.',
-                    microtime(true) - $startTime
-                )
+                'text'  => I18N::_('started', microtime(true) - $startTime)
             ];
         }
 
@@ -306,7 +303,7 @@ class Snipe
         return true;
     }
 
-    public function getNameHash()
+    public function getHash()
     {
         return substr(md5($this->name), -12);
     }
@@ -348,6 +345,12 @@ class Snipe
 
         if (is_file($file)) {
             $log = file_get_contents($file);
+
+            $enc = mb_detect_encoding($log, ['UTF-8', 'ISO-8859-1']);
+
+            if ($enc != 'UTF-8') {
+                $log = iconv($enc ?: 'ISO-8859-1', 'UTF-8', $log);
+            }
 
             // Auction won?
             if (preg_match('~won \d+ item~', $log) &&
@@ -403,7 +406,7 @@ class Snipe
                 unlink($pidFile);
             }
         } else {
-            $pid = (int) exec('ps -fea | grep -v grep | grep '.$this->getNameHash().' | awk \'{print $2}\'');
+            $pid = (int) exec('ps -fea | grep -v grep | grep '.$this->getHash().' | awk \'{print $2}\'');
             if ($pid) {
                 file_put_contents($pidFile, $pid);
             }
@@ -420,6 +423,6 @@ class Snipe
      */
     protected function getFileName($ext)
     {
-        return sprintf('%s/%s.%s', User::$dir, $this->getNameHash(), $ext);
+        return sprintf('%s/%s.%s', User::$dir, $this->getHash(), $ext);
     }
 }

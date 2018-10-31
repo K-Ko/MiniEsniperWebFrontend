@@ -54,5 +54,24 @@ input[type='text'] {
 }
 
 .loading {
+    cursor: progress;
     opacity: 0.25;
+}
+
+.name {
+    font-weight: bold;
+}
+
+@media (min-width: 576px) {
+    .name {
+        font-size: 1.25rem;
+    }
+}
+
+.row.group.expanded {
+    border: 1px solid black;
+}
+
+.log {
+    background-color: white;
 }

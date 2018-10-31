@@ -37,7 +37,7 @@ $(function() {
     $('#toggle-form').click(function(e) {
         e.preventDefault();
 
-        var edit = $('#add-form');
+        let edit = $('#add-form');
 
         // Hide all logs
         $('.log').addClass('d-none');
@@ -58,40 +58,48 @@ $(function() {
     $('[data-toggle=log]').click(function(e) {
         e.preventDefault();
 
-        var el = $('#log-' + $(this).data('token'));
+        let $this = $(this),
+            group = $this.closest('.group'),
+            log = group.find('.log');
 
-        if (el.hasClass('d-none')) {
+        if (log.hasClass('d-none')) {
             // When open a log, hide the auction edit form
             if (!$('#add-form').hasClass('d-none')) {
                 $('#toggle-form').trigger('click');
             }
             // Hide all logs
             $('.log').addClass('d-none');
+            $('.group').removeClass('expanded');
             // Show only requested log
-            el.removeClass('d-none');
-            // Scroll log to the end
-            $('.pre', el)
+            group.addClass('expanded');
+            log.removeClass('d-none')
+                // Scroll log to the end
+                .find('.pre')
                 .scrollTop(9999)
                 .focus();
         } else {
             // Close requested log
-            el.addClass('d-none');
+            group.removeClass('expanded');
+            log.addClass('d-none');
         }
     });
 
     $('[data-api=edit]').click(function(e) {
         e.preventDefault();
 
-        var el_form = $('#add-form');
+        let form = $('#add-form');
 
         // Hide all logs
         $('.log').addClass('d-none');
+        $('.group').removeClass('expanded');
         // Prepare form
-        el_form.addClass('loading').removeClass('d-none');
+        form.addClass('loading').removeClass('d-none');
         // Switch plus/minus signs
         $('#toggle-form')
             .removeClass('fa-plus-circle')
             .addClass('fa-minus-circle');
+
+        $(window).scrollTop(0);
 
         // Fetch auction group data
         $.getJSON('/', { api: 'edit', token: $(this).data('token') }, function(
@@ -103,48 +111,80 @@ $(function() {
                 .trigger('input')
                 .focus();
         }).always(function() {
-            el_form.removeClass('loading');
+            form.removeClass('loading');
         });
     });
 
     $('[data-api=stop]').click(function(e) {
         e.preventDefault();
 
-        var $this = $(this),
-            token = $this.data('token');
+        let $this = $(this),
+            token = $this.data('token'),
+            group = $this.closest('.group').addClass('loading');
 
         $.getJSON('/', { api: 'stop', token: token }, function(data) {
             if (data) {
-                var row = $this.closest('.row');
-                row.removeClass('table-success').addClass('table-secondary');
+                group.removeClass('table-success').addClass('table-secondary');
                 // Switch buttons
-                $('.btn-stop', row).addClass('d-none');
-                $('.btn-delete', row).removeClass('d-none');
+                group.find('.btn-stop').addClass('d-none');
+                group.find('.btn-delete').removeClass('d-none');
                 // Set new log
-                $('#log-' + token + ' div div').html(data);
+                group.find('.pre').html(data);
                 // Hide all logs
                 $('.log').addClass('d-none');
+                $('.group').removeClass('expanded');
                 // Show new log
-                $('[data-toggle=log]', row).trigger('click');
+                group.find('[data-toggle=log]').trigger('click');
             }
+        }).always(function() {
+            group.removeClass('loading');
         });
     });
 
     $('[data-api=delete]').click(function(e) {
         e.preventDefault();
 
-        var $this = $(this),
-            token = $this.data('token');
+        let $this = $(this).blur(),
+            token = $this.data('token'),
+            group = $this.closest('.group').addClass('loading');
 
         $.getJSON('/', { api: 'delete', token: token }, function(data) {
             if (data) {
-                $this.closest('.row').remove();
-                $('#log-' + token).remove();
+                group.fadeToggle({
+                    complete: function() {
+                        group.remove();
+                    }
+                });
                 $('#add-form').addClass('d-none');
                 $('#toggle-form')
                     .removeClass('fa-minus-circle')
                     .addClass('fa-plus-circle');
             }
+        }).always(function() {
+            group.removeClass('loading');
+        });
+    });
+
+    $('[data-api=log]').click(function(e) {
+        e.preventDefault();
+
+        let $this = $(this),
+            token = $this.data('token'),
+            log = $this.parent().find('.pre');
+
+        $this
+            .blur()
+            .prop('disabled', true)
+            .find('.fa')
+            .addClass('fa-spin');
+
+        $.getJSON('/', { api: 'log', token: token }, function(data) {
+            data && log.html(data).scrollTop(9999);
+        }).always(function() {
+            $this
+                .prop('disabled', false)
+                .find('.fa')
+                .removeClass('fa-spin');
         });
     });
 
@@ -152,7 +192,7 @@ $(function() {
         e.preventDefault();
 
         $.get('/app/example.txt', function(data) {
-            var el = $('#data'),
+            let el = $('#data'),
                 text = el.text() + '\n';
             el.text((text + data).trim())
                 .trigger('input')
@@ -162,24 +202,17 @@ $(function() {
 
     // https://stackoverflow.com/a/31564270
     $(window).on('beforeunload', function() {
+        $('.container').addClass('loading');
         $('*').css('cursor', 'progress');
     });
 
     // Remove only success alert
     setTimeout(function() {
         $('.alert-success')
-            .closest('.row')
+            .closest('.group')
             .fadeTo(500, 0)
             .slideUp(500, function() {
                 $(this).remove();
             });
     }, 5000);
-
-    // Reload page on activate
-    pageVisibilityApi.Init({
-        onShow: function() {
-            location.href = '/';
-        },
-        delay: 1
-    });
 });

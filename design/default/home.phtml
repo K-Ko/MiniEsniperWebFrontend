@@ -4,8 +4,8 @@
            rel="tooltip" title="{|toggle_form|}"></a>
     </div>
     <div class="col text-center user">
-        <span class="d-sm-none">{{echo mef\User::$name}}</span>
-        <span class="d-none d-sm-inline h2">{{echo mef\User::$name}}</span>
+        <span class="d-sm-none">{{echo App\User::$name}}</span>
+        <span class="d-none d-sm-inline h2">{{echo App\User::$name}}</span>
         <form method="post">
             <button type="submit" class="btn btn-light" rel="tooltip" title="{|logout|}"
                     name="action" value="logout">
@@ -75,30 +75,40 @@
 
 <!-- Sniping groups start-->
 <div class="mt-3 px-3">
-    {{foreach ($snipes as $snipe): $token = $snipe->getNameHash()}}
-    <div class="row py-2 table-bordered table-{{echo $snipe->pid ? 'success' : 'secondary'}}">
-        <div class="col">
-            <strong class="pointer" rel="tooltip" title="{|show_log|}"
-                    data-toggle="log" data-token="{{$token}}" style="font-size:1.2rem">{{$snipe->name}}</strong>
+    {{foreach ($snipes as $snipe): $token = $snipe->getHash()}}
+    <div class="row group table-bordered table-{{echo $snipe->pid ? 'success' : 'secondary'}}">
+        {{if (isset($_SESSION['new'][$snipe->getHash()])):}}
+        <div class="col-auto name py-2 pr-0">
+            <i class="fas fa-fw fa-exclamation-circle" style="color:green"></i>
+        </div>
+        {{endif}}
+        <div class="col py-2">
+            <span class="pointer name mr-2" rel="tooltip" title="{|show_log|}"
+                  data-toggle="log" data-token="{{$token}}">
+                {{$snipe->name}}
+            </span>
             {{if ($snipe->end):}}
             <br>
-            <small>{{$snipe->end}}</small>
+            <small class="text-monospace">
+                <i class="fas fa-fw fa-clock mr-1"></i> {{$snipe->end}}
+            </small>
             {{elseif ($snipe->won):}}
-            <div class="badge badge-pill badge-success text-monospace ml-3" rel="tooltip"
-                 title="{|won|}">
+            <div class="badge badge-pill badge-success align-text-bottom text-monospace"
+                 rel="tooltip" title="{|won|}">
                 <i class="fa fa-fw fa-shopping-bag pr-2"></i> {{$snipe->won}}
             </div>
             {{endif}}
         </div>
-        <div class="col-auto text-right pr-2">
+        <div class="col-auto text-right py-2 pr-2">
             <!-- Action buttons -->
             <form method="post">
                 <input type="hidden" name="name" value="{{$snipe->name}}">
 
-                <a href="#" data-api="edit" data-token="{{$token}}" class="btn btn-sm btn-primary mr-2"
+                <a href="#" data-api="edit" data-token="{{$token}}" class="btn btn-sm btn-primary mr-sm-2 mb-2 mb-sm-0"
                    rel="tooltip" title="{|edit_group|}" value="edit">
                     <i class="far fa-fw fa-edit"></i>
                 </a>
+                <br class="d-sm-none">
                 <!-- esniper process IS running -->
                 <button class="btn btn-sm btn-danger btn-stop {{if (!$snipe->pid):}}d-none{{endif}}"
                         name="action" data-api="stop" data-token="{{$token}}"
@@ -114,13 +124,15 @@
 
             </form>
         </div>
-    </div>
-    <div id="log-{{$token}}" class="row log d-none">
-        <div class="col p-0">
+        <div class="col-12 log d-none px-0">
             <!-- esniper prtocol file -->
-            <div class="pre p-2 mb-0" tabindex="-1">
-                {{if ($snipe->log):}}{{$snipe->log}}{{else:}}No auction
-                log{{endif}}</div>
+            <div class="pre p-2 mb-0" tabindex="-1">{{if ($snipe->log):}}{{$snipe->log}}{{else:}}{|no_log|}{{endif}}</div>
+            {{if ($snipe->end):}}
+            <a class="btn btn-sm btn-light m-2" data-api="log" data-token="{{$token}}"
+               rel="tooltip" title="{|reload_log|}">
+                <i class="fa fa-sync"></i>
+            </a>
+            {{endif}}
         </div>
     </div>
     {{endforeach}}
@@ -158,13 +170,8 @@
 </div>
 {{endif}}
 
-<footer class="footer d-none d-sm-block mb-5">
-    <div class="row">
-        <div class="col">
-            <hr>
-        </div>
-    </div>
-    <div class="row">
+<footer class="footer my-5">
+    <div class="row d-none d-sm-flex border-top pt-2">
         <div class="col">
             <img src="favicon.ico" class="mr-1" style="height:1rem;vertical-align:text-top;">
             Minimal esniper web frontend
@@ -185,33 +192,51 @@
                 {{$config->esniper_version}}
             </a>
             <br>
-            <a href="javascript:(
-            function() {
-                var w = window, d = document,
-                    s = d.getElementById('descItemNumber').innerText || w.getSelection().toString(),
-                    f = d.getElementById('fshippingCost').getElementsByTagName('span')[0].innerHTML;
-                if (s) {
-                    var e = encodeURIComponent,
-                        p = w.open('http://{{$server_name}}?api=bookmark&token={{$user_name}}' +
-                                   '&name=' + e(d.title.replace(/\s*\|.*/, '')) +
-                                   '&item=' + e(s) +
-                                   '&ship=' + e(f),
-                                   'es_popup',
-                                   'left=' + ((w.screenX || w.screenLeft) + 25) + ',' +
-                                   'top=' + ((w.screenY || w.screenTop) + 25) + ',' +
-                                   'height=120px,' +
-                                   'width=480px,' +
-                                   'menubar=0,' +
-                                   'resizable=0,' +
-                                   'status=0,' +
-                                   'location=0,' +
-                                   'alwaysRaised=1' );
-                    w.setTimeout(function() { p.focus(); }, 300);
+            <a href="javascript:(function(w, d) {
+                let itemEl = d.getElementById('descItemNumber'),
+                    item = itemEl ? itemEl.innerHTML : w.getSelection().toString();
+                if (item) {
+                    let name = prompt('{|group_name|}', d.title.replace(/\s*\|.*/, ''));
+                    if (!name) return;
+                    let priceEl = d.querySelectorAll('[itemprop=price]'),
+                        price = priceEl ? priceEl[0].getAttribute('content') : '1.00',
+                        bid = prompt('{|your_bid|}', price);
+                    if (!bid) return;
+                    let shipEl = d.getElementById('fshippingCost').getElementsByTagName('span'),
+                        ship = shipEl ? shipEl[0].innerHTML : '',
+                        e = encodeURIComponent;
+                    w.open(
+                        [   'http://{{$server_name}}?api=bookmark',
+                            'token=' + e('{{$user_name}}'),
+                            'item=' + e(item),
+                            'name=' + e(name),
+                            'price=' + e(price),
+                            'ship=' + e(ship),
+                            'bid=' + e(bid)
+                        ].join('&'),
+                        'mewf_popup',
+                        'width=480,height=120,dialog,dependent,titlebar=0'
+                    );
                 } else {
-                    w.alert('Please select item Id before!');
+                    w.alert('Can not detect item number, please help and select item number before!');
                 }
-            })();"
-               class="small" rel="tooltip" title="{|bookmarklet_hint|}">{|bookmarklet|}</a>
+            })(window, document);"
+               class="small" rel="tooltip" title="{|bookmarklet_hint|}">
+                {|bookmarklet|}
+            </a>
+            |
+            <a href="/?login={{echo urlencode($_SESSION['token'])}}" class="small"
+               rel="tooltip" title="{|bookmarklet_hint|}">
+                {|token_login|}
+            </a>
+        </div>
+    </div>
+    <div class="row d-sm-none">
+        <div class="col text-center">
+            <a href="/?login={{echo urlencode($_SESSION['token'])}}" class="small"
+               rel="tooltip" title="{|bookmarklet_hint|}">
+                {|token_login|}
+            </a>
         </div>
     </div>
 </footer>
