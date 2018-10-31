@@ -67,5 +67,7 @@ return [
     /**
      * Inital language
      */
-    'language' => 'en'
+    'language' => 'en',
+
+    'secret' => null
 ];

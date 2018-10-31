@@ -1,6 +1,6 @@
 {
-    "name": "Minimal esniper frontend",
-    "short_name": "MEF",
+    "name": "Minimal esniper web frontend",
+    "short_name": "MEWF",
     "lang": "en-EN",
     "start_url": "/",
     "display": "standalone",

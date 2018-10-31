@@ -2,7 +2,7 @@
 
 ![](https://img.shields.io/github/release/K-Ko/MiniEsniperWebFrontend.svg)
 
-This repo will cover the handling of [esniper](http://esniper.sourceforge.net/),  a lightweight eBay sniping tool.
+This repo will cover the handling of [esniper](http://esniper.sourceforge.net/), a lightweight eBay sniping tool.
 
 It works directly with the files created by esniper.
 
@@ -31,6 +31,14 @@ and adjust the settings for your needs.
 This will not checked, only used for esniper starts.
 Credentials will be stored in session only.
 
+If you want to use the token login, please execute
+
+    tr -dc 'A-Za-z0-9_!$%&()[]{}=?;:+#' </dev/urandom | head -c1024
+
+and put the output into `config.local.php` in
+
+    'secret' => '...'
+
 ### Add auctions
 
 Give your auction group a name and key in all auctions and at least one bid for all auctions in 1st line.
@@ -47,8 +55,8 @@ This will stop the running esniper process for this group and you can adjust the
 
 ### Remove auction groups
 
-  - 1st stop, if active
-  - Click on the trash button near the auction group name.
+-   1st stop, if active
+-   Click on the trash button near the auction group name.
 
 This will remove the auction group and the log file.
 
@@ -62,8 +70,8 @@ and `hooks.dist.php` for examples.
 
 ## Translations
 
-* Checkout a new branch
-* Copy `language/en.php` to your language shortcut
-* Translate the items
-* Add your language to `config.default.php` (with locales if needed)
-* Make a pull request :-)
+-   Checkout a new branch
+-   Copy `language/en.php` to your language shortcut
+-   Translate the items
+-   Add your language to `config.default.php` (with locales if needed)
+-   Make a pull request :-)

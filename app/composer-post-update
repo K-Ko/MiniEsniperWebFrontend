@@ -1,4 +1,4 @@
-vendor=$(dirname $0)/../vendor
+pwd=$(dirname $(dirname $(realpath $0)))
 
-cp $vendor/twitter/bootstrap/dist/css/*.css $vendor/../design/default/css/
-cp $vendor/twitter/bootstrap/dist/js/*.js $vendor/../design/default/js/
+cp $pwd/vendor/twitter/bootstrap/dist/css/*min* $pwd/design/default/css/
+cp $pwd/vendor/twitter/bootstrap/dist/js/*min* $pwd/design/default/js/
