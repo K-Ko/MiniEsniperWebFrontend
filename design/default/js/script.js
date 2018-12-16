@@ -155,7 +155,10 @@ $(function() {
                         group.remove();
                     }
                 });
+                // Clear edit form as needed
                 $('#add-form').addClass('d-none');
+                $('#name, #name_old').prop('value', '');
+                $('#data').html('');
                 $('#toggle-form')
                     .removeClass('fa-minus-circle')
                     .addClass('fa-plus-circle');
